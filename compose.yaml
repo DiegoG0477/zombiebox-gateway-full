@@ -1,0 +1,24 @@
+name: zombie-box-tv
+services:
+  gateway:
+    image: zombie-box-tv/gateway:0.1.0-dev
+    build:
+      context: ..
+      dockerfile: gateway-full/Dockerfile
+    ports:
+      - "${ZOMBIE_BIND_IP:-127.0.0.1}:8090:8090"
+    environment:
+      GOMEMLIMIT: 192MiB
+      GOMAXPROCS: "2"
+    mem_limit: 256m
+    cpus: 2.0
+    pids_limit: 64
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    healthcheck:
+      test: [CMD, /zombied, -healthcheck, "http://127.0.0.1:8090"]
+      interval: 15s
+      timeout: 4s
+      retries: 3
+    restart: unless-stopped
