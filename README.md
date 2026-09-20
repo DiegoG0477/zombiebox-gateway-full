@@ -1,7 +1,9 @@
 # Gateway Full
 
-From the root, `make full-up` builds the core from `../gateway/`; `make full-down` stops it. Do not run the native gateway on the same port simultaneously.
+From the root, `make full-up` prepares private runtime directories and builds/starts the shared Go core. `make full-down` stops it. Binding defaults to localhost:8090. Do not run the native gateway concurrently.
 
-The bootstrap scratch image contains only the Go binary: no shell, FFmpeg or CA bundle. This suffices for health; add a runtime with verified CA certificates and separate workers when outbound provider requests are implemented. This is not a complete media distribution yet.
+The runtime image contains the Go binary and CA certificates. It runs with the configured host UID/GID, a read-only root filesystem, no capabilities, a writable SQLite directory, read-only config/media mounts and Fedora SELinux labels. It has a 256 MiB / two CPU budget. Docker does not contain the Android client or an external database.
 
-Core budget: 256 MiB and two CPUs. Future providers need pinned versions, healthchecks, opt-in profiles and separate resource budgets. See `../third_party/README.md` for wrapper boundaries.
+Configuration starts empty (`{}`). Add credentials from the paired client or the server JSON/environment as described in [services and credentials](../docs/development/services-and-credentials.md). Private data survives container recreation.
+
+FFmpeg, Threadfin, YouTube.js, go-librespot, UxPlay, MediaMTX and Rebrowser workers are not packaged in this checkpoint. Their upstream references are pinned locally; they are not operational integrations. The milestone registry tracks that remaining work explicitly.

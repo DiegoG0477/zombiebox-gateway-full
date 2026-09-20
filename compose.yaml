@@ -1,15 +1,26 @@
 name: zombie-box-tv
 services:
   gateway:
-    image: zombie-box-tv/gateway:0.1.0-dev
+    image: zombie-box-tv/gateway:0.1.0-dev.2
     build:
       context: ..
       dockerfile: gateway-full/Dockerfile
+    user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
     ports:
       - "${ZOMBIE_BIND_IP:-127.0.0.1}:8090:8090"
     environment:
       GOMEMLIMIT: 192MiB
       GOMAXPROCS: "2"
+      ZOMBIE_PAIRING_CODE: "${ZOMBIE_PAIRING_CODE:-}"
+      ZOMBIE_IPTV_URL: "${ZOMBIE_IPTV_URL:-}"
+      ZOMBIE_XMLTV_URL: "${ZOMBIE_XMLTV_URL:-}"
+      ZOMBIE_PLEX_TOKEN: "${ZOMBIE_PLEX_TOKEN:-}"
+      ZOMBIE_JELLYFIN_TOKEN: "${ZOMBIE_JELLYFIN_TOKEN:-}"
+      ZOMBIE_JELLYFIN_USER_ID: "${ZOMBIE_JELLYFIN_USER_ID:-}"
+    volumes:
+      - ../.local/gateway/state:/data:Z
+      - ../.local/gateway/media:/media:ro,Z
+      - ../.local/gateway/config:/config:ro,Z
     mem_limit: 256m
     cpus: 2.0
     pids_limit: 64
