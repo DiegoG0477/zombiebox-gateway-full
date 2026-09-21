@@ -76,3 +76,8 @@ Dev.19: Packages dev.19 shared media, EPG, diagnostics and SQLite migration core
 Dev.20: Packages shared dev.20 handoff and low-bandwidth conversion. Unchanged worker image pins are retained.
 
 Dev.21: Packages shared dev.21 network/search/state maintenance; unchanged optional workers retain their image pins.
+
+## dev.22 increment
+
+Packages the shared dev.22 receiver-coordination core; optional workers retain their version pins.
+No product or physical acceptance gate closes.

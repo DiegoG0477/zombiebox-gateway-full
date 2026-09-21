@@ -55,3 +55,10 @@ Packages shared dev.21 network/search/state maintenance; unchanged optional work
 No physical, account or product milestone closes.
 
 Verification: Compose configuration, image build, isolated startup/pairing/restart persistence, packaged track/subtitle conversion and remote-media checks pass on Fedora. This does not validate account or physical A/V behavior.
+
+## dev.22 increment
+
+Packages the shared dev.22 receiver-coordination core; optional workers retain their version pins.
+No product or physical acceptance gate closes.
+
+Verification: Compose configuration, Full image build, packaged track/remote-media checks and isolated startup/pairing/restart smoke pass on Fedora.
