@@ -70,3 +70,5 @@ First-party code: [GPL-3.0-only](LICENSE). See [NOTICE](NOTICE) for third-party 
 Dev.18 retains processed artwork across restarts in `/data/artwork` in the existing persistent state volume.
 The shared cache defaults to 64 MiB/24 hours; `-artwork-cache-mb 0` disables disk
 persistence. Source URLs/credentials/original images are not stored in cache files.
+
+Dev.19: Packages dev.19 shared media, EPG, diagnostics and SQLite migration core; unchanged workers retain their existing image pins.
