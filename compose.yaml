@@ -1,7 +1,7 @@
 name: zombie-box-tv
 services:
   gateway:
-    image: zombie-box-tv/gateway:0.1.0-dev.2
+    image: zombie-box-tv/gateway:0.1.0-dev.3
     build:
       context: ..
       dockerfile: gateway-full/Dockerfile
@@ -30,6 +30,29 @@ services:
     healthcheck:
       test: [CMD, /zombied, -healthcheck, "http://127.0.0.1:8090"]
       interval: 15s
+      timeout: 4s
+      retries: 3
+    restart: unless-stopped
+
+  youtube:
+    profiles: [youtube]
+    image: zombie-box-tv/youtube:0.1.0-dev.3
+    build:
+      context: ..
+      dockerfile: wrappers/youtube/Dockerfile
+    user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
+    volumes:
+      - ../.local/youtube:/config:ro,Z
+    expose: [8091]
+    mem_limit: 320m
+    cpus: 1.0
+    pids_limit: 32
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8091/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
       timeout: 4s
       retries: 3
     restart: unless-stopped

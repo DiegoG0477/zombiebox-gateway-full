@@ -13,4 +13,4 @@ fi
 chmod 700 "$runtime" "$runtime/state" "$runtime/config" "$runtime/media"
 chmod 600 "$runtime/config/providers.json" "$runtime/compose.env"
 printf 'Runtime prepared at %s\n' "$runtime"
-printf 'Provider configuration is empty; use client Settings or edit config/providers.json.\n'
+printf 'Configure providers through client Settings or config/providers.json. Existing configuration is preserved.\n'
