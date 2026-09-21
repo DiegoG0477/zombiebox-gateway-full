@@ -9,7 +9,7 @@ import urllib.request
 import uuid
 from pathlib import Path
 
-IMAGE = "zombie-box-tv/gateway:0.1.0-dev.19"
+IMAGE = "zombie-box-tv/gateway:0.1.0-dev.20"
 
 
 def command(*args):

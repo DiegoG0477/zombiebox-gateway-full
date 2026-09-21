@@ -72,3 +72,5 @@ The shared cache defaults to 64 MiB/24 hours; `-artwork-cache-mb 0` disables dis
 persistence. Source URLs/credentials/original images are not stored in cache files.
 
 Dev.19: Packages dev.19 shared media, EPG, diagnostics and SQLite migration core; unchanged workers retain their existing image pins.
+
+Dev.20: Packages shared dev.20 handoff and low-bandwidth conversion. Unchanged worker image pins are retained.

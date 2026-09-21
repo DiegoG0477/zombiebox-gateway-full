@@ -3,7 +3,7 @@
 set -euo pipefail
 full_dir=$(cd "$(dirname "$0")/.." && pwd)
 core_dir=${ZOMBIE_CORE_DIR:-$full_dir/../gateway-core}
-image=${ZOMBIE_SMOKE_IMAGE:-zombie-box-tv/gateway:0.1.0-dev.19}
+image=${ZOMBIE_SMOKE_IMAGE:-zombie-box-tv/gateway:0.1.0-dev.20}
 fixture_dir=$(mktemp -d)
 trap 'rm -rf "$fixture_dir"' EXIT
 CGO_ENABLED=0 GOMAXPROCS=2 go -C "$core_dir/gateway" test -p 2 -c -o "$fixture_dir/media.test" ./internal/media
@@ -12,4 +12,4 @@ docker run --rm --network none --read-only --memory 512m --cpus 2 --pids-limit 9
     --cap-drop ALL --security-opt no-new-privileges:true \
     --tmpfs /tmp:rw,nosuid,nodev,size=64m \
     -v "$fixture_dir:/fixtures:ro,Z" --entrypoint /fixtures/media.test \
-    "$image" -test.v -test.run '^(TestRemote|TestLive|TestManifest)' -test.timeout 90s
+    "$image" -test.v -test.run '^(TestRemote|TestLive|TestManifest|TestRealTrackSelection)' -test.timeout 90s

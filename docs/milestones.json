@@ -13,7 +13,8 @@
     "Dev.16: Packages shared dev.16 gateway, YouTube, Spotify, AirPlay and browser workers. Unchanged receiver/Threadfin images retain prior pins. No product milestone closes.",
     "Dev.17: GPL-3.0-only licensing, navigation/Hero/guide/receiver and scoped distribution increment. No physical milestone is closed.",
     "Dev.18: bounded persistent artwork derivatives, restart reuse, private cache keys, device/layout profiles and conditional HTTP caching. No physical milestone closes.",
-    "Dev.19: Packages dev.19 shared media, EPG, diagnostics and SQLite migration core; unchanged workers retain their existing image pins. Product exit gates remain open."
+    "Dev.19: Packages dev.19 shared media, EPG, diagnostics and SQLite migration core; unchanged workers retain their existing image pins. Product exit gates remain open.",
+    "Dev.20: Packages shared dev.20 handoff and low-bandwidth conversion. Unchanged worker image pins are retained. Product and physical exit gates remain open."
   ],
   "milestones": [
     {
@@ -59,5 +60,5 @@
       "remoteId": null
     }
   ],
-  "developmentCheckpoint": "v0.1.0-dev.19"
+  "developmentCheckpoint": "v0.1.0-dev.20"
 }
