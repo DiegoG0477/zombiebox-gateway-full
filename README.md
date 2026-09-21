@@ -86,3 +86,9 @@ No product or physical acceptance gate closes.
 
 LAN HTTP defaults and a constrained host-network discovery sidecar; make up prepares and builds the pinned core.
 No product or physical acceptance gate closes.
+
+
+## dev.24 increment
+
+Packages the shared companion core in dev.24 and includes the QR encoder license. Existing running services are not automatically replaced.
+Full visual/capture policy, extended Remote, HEVC/4K and other product gates remain open; physical acceptance stays deferred.

@@ -67,3 +67,11 @@ Verification: Compose configuration, Full image build, packaged track/remote-med
 
 Trusted-LAN HTTP default and constrained host-network discovery sidecar; make up prepares/builds exact core.
 Product exit gates and deferred physical acceptance remain open.
+
+
+## dev.24 increment
+
+Packages the shared companion core in dev.24 and includes the QR encoder license. Existing running services are not automatically replaced.
+Full visual/capture policy, extended Remote, HEVC/4K and other product gates remain open; physical acceptance stays deferred.
+
+Verification: All Compose profiles validate and the dev.24 image builds with the QR encoder license. The existing dev.22 service remains healthy and unchanged.

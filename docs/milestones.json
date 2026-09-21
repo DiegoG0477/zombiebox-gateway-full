@@ -17,7 +17,8 @@
     "Dev.20: Packages shared dev.20 handoff and low-bandwidth conversion. Unchanged worker image pins are retained. Product and physical exit gates remain open.",
     "Dev.21: Packages shared dev.21 network/search/state maintenance; unchanged optional workers retain their image pins. Product/physical exit gates remain open.",
     "Dev.22: Packages the shared dev.22 receiver-coordination core; optional workers retain their version pins. Product and physical exit gates remain open.",
-    "Dev.23: Trusted-LAN HTTP default and constrained host-network discovery sidecar; make up prepares/builds exact core. Product and physical gates remain open."
+    "Dev.23: Trusted-LAN HTTP default and constrained host-network discovery sidecar; make up prepares/builds exact core. Product and physical gates remain open.",
+    "Dev.24: Packages the shared companion core in dev.24 and includes the QR encoder license. Existing running services are not automatically replaced. Product and physical gates remain open."
   ],
   "milestones": [
     {
@@ -63,5 +64,5 @@
       "remoteId": null
     }
   ],
-  "developmentCheckpoint": "v0.1.0-dev.23"
+  "developmentCheckpoint": "v0.1.0-dev.24"
 }
