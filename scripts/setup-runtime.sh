@@ -5,10 +5,10 @@ umask 077
 runtime="$repo/.local/gateway"
 mkdir -p "$runtime/state" "$runtime/config" "$runtime/media"
 if [[ ! -f "$runtime/config/providers.json" ]]; then
-  printf '{}\n' > "$runtime/config/providers.json"
+    printf '{}\n' >"$runtime/config/providers.json"
 fi
 if [[ ! -f "$runtime/compose.env" ]]; then
-  printf 'ZOMBIE_UID=%s\nZOMBIE_GID=%s\n' "$(id -u)" "$(id -g)" > "$runtime/compose.env"
+    printf 'ZOMBIE_UID=%s\nZOMBIE_GID=%s\n' "$(id -u)" "$(id -g)" >"$runtime/compose.env"
 fi
 python3 - "$runtime/compose.env" <<'PYTHON'
 import pathlib,secrets,sys

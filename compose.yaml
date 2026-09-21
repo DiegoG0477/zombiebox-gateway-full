@@ -5,7 +5,26 @@ services:
     build:
       context: ..
       dockerfile: gateway-full/Dockerfile
-    command: ["-listen", "0.0.0.0:8090", "-state", "/data/gateway.db", "-media-dir", "/media", "-config", "/config/providers.json", "-relay-url", "http://mediamtx:8888", "-relay-control-url", "http://mediamtx:9997", "-media-tools", "-probe-dir", "/probes", "-threadfin-url", "http://threadfin:34400"]
+    command:
+      [
+        "-listen",
+        "0.0.0.0:8090",
+        "-state",
+        "/data/gateway.db",
+        "-media-dir",
+        "/media",
+        "-config",
+        "/config/providers.json",
+        "-relay-url",
+        "http://mediamtx:8888",
+        "-relay-control-url",
+        "http://mediamtx:9997",
+        "-media-tools",
+        "-probe-dir",
+        "/probes",
+        "-threadfin-url",
+        "http://threadfin:34400",
+      ]
     user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
     extra_hosts: ["host.docker.internal:host-gateway"]
     ports:
@@ -55,7 +74,13 @@ services:
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
     healthcheck:
-      test: [CMD, node, -e, "fetch('http://127.0.0.1:8091/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      test:
+        [
+          CMD,
+          node,
+          -e,
+          "fetch('http://127.0.0.1:8091/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
       interval: 30s
       timeout: 4s
       retries: 3

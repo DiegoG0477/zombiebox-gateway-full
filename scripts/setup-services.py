@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Prepare private optional services and pinned source-only build contexts."""
+
 import argparse
 import json
 import os
@@ -10,11 +11,15 @@ import tarfile
 import tempfile
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--enable", choices=("spotify", "airplay", "threadfin", "rebrowser", "youtube_receiver"))
+parser.add_argument(
+    "--enable",
+    choices=("spotify", "airplay", "threadfin", "rebrowser", "youtube_receiver"),
+)
 parser.add_argument("--sources", action="store_true")
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 os.umask(0o077)
+
 
 def write(path, value):
     temporary = path.with_suffix(path.suffix + ".tmp")
@@ -22,15 +27,28 @@ def write(path, value):
     temporary.chmod(0o600)
     temporary.replace(path)
 
+
 provider_file = root / ".local/gateway/config/providers.json"
 providers = json.loads(provider_file.read_text())
 receiver_folder = root / ".local/youtube-receiver"
 receiver_folder.mkdir(parents=True, exist_ok=True)
 receiver_config = receiver_folder / "receiver.json"
 if not receiver_config.exists():
-    write(receiver_config, {"token": secrets.token_hex(32), "listen": "0.0.0.0", "port": 8095, "dialPort": 8096})
+    write(
+        receiver_config,
+        {
+            "token": secrets.token_hex(32),
+            "listen": "0.0.0.0",
+            "port": 8095,
+            "dialPort": 8096,
+        },
+    )
 if "youtube_receiver" not in providers:
-    providers["youtube_receiver"] = {"enabled": args.enable == "youtube_receiver", "url": "http://host.docker.internal:8095", "token": json.loads(receiver_config.read_text())["token"]}
+    providers["youtube_receiver"] = {
+        "enabled": args.enable == "youtube_receiver",
+        "url": "http://host.docker.internal:8095",
+        "token": json.loads(receiver_config.read_text())["token"],
+    }
 elif args.enable == "youtube_receiver":
     providers["youtube_receiver"]["enabled"] = True
 browser_folder = root / ".local/rebrowser"
@@ -39,7 +57,11 @@ browser_config = browser_folder / "browser.json"
 if not browser_config.exists():
     write(browser_config, {"token": secrets.token_hex(32)})
 if "rebrowser" not in providers:
-    providers["rebrowser"] = {"enabled": args.enable == "rebrowser", "url": "http://rebrowser:8094", "token": json.loads(browser_config.read_text())["token"]}
+    providers["rebrowser"] = {
+        "enabled": args.enable == "rebrowser",
+        "url": "http://rebrowser:8094",
+        "token": json.loads(browser_config.read_text())["token"],
+    }
 elif args.enable == "rebrowser":
     providers["rebrowser"]["enabled"] = True
 for name, port in (("spotify", 8092), ("airplay", 8093)):
@@ -48,7 +70,12 @@ for name, port in (("spotify", 8092), ("airplay", 8093)):
     (folder / "state").mkdir(exist_ok=True)
     worker = folder / "worker.json"
     if not worker.exists():
-        config = {"mode": name, "listen": f"0.0.0.0:{port}", "token": secrets.token_hex(32), "stateDir": "/state"}
+        config = {
+            "mode": name,
+            "listen": f"0.0.0.0:{port}",
+            "token": secrets.token_hex(32),
+            "stateDir": "/state",
+        }
         if name == "airplay":
             config["pin"] = f"{secrets.randbelow(10000):04d}"
         write(worker, config)
@@ -57,7 +84,11 @@ for name, port in (("spotify", 8092), ("airplay", 8093)):
         raise SystemExit(f"Invalid {name} worker token; existing file preserved")
     host = "host.docker.internal" if name == "airplay" else name
     if name not in providers:
-        providers[name] = {"enabled": args.enable == name, "url": f"http://{host}:{port}", "token": config["token"]}
+        providers[name] = {
+            "enabled": args.enable == name,
+            "url": f"http://{host}:{port}",
+            "token": config["token"],
+        }
     elif args.enable == name:
         providers[name]["enabled"] = True
     if name == "spotify":
@@ -88,8 +119,14 @@ server:
 if args.enable == "threadfin":
     current = providers.get("iptv", {})
     if current.get("url") and "/m3u/threadfin.m3u" not in current["url"]:
-        raise SystemExit("Existing IPTV input preserved. Import it in Threadfin and explicitly select the Threadfin export in gateway settings.")
-    providers["iptv"] = {"enabled": True, "url": "http://threadfin:34400/m3u/threadfin.m3u", "epgUrl": "http://threadfin:34400/xmltv/threadfin.xml"}
+        raise SystemExit(
+            "Existing IPTV input preserved. Import it in Threadfin and explicitly select the Threadfin export in gateway settings."
+        )
+    providers["iptv"] = {
+        "enabled": True,
+        "url": "http://threadfin:34400/m3u/threadfin.m3u",
+        "epgUrl": "http://threadfin:34400/xmltv/threadfin.xml",
+    }
 write(provider_file, providers)
 
 if args.sources:
@@ -98,16 +135,24 @@ if args.sources:
         if entry["name"] not in ("go-librespot", "uxplay", "threadfin"):
             continue
         source = root / "third_party/sources" / entry["name"]
-        actual = subprocess.check_output(["git", "-C", str(source), "rev-parse", "HEAD"], text=True).strip()
+        actual = subprocess.check_output(
+            ["git", "-C", str(source), "rev-parse", "HEAD"], text=True
+        ).strip()
         if actual != entry["commit"]:
             raise SystemExit(f"Restore pinned {entry['name']} with make references")
         destination = root / ".local/build-sources" / entry["name"]
         destination.mkdir(parents=True, exist_ok=True)
         # git archive excludes local changes, .git and untracked generated files.
         with tempfile.TemporaryFile() as archive:
-            subprocess.run(["git", "-C", str(source), "archive", actual], stdout=archive, check=True)
+            subprocess.run(
+                ["git", "-C", str(source), "archive", actual],
+                stdout=archive,
+                check=True,
+            )
             archive.seek(0)
             with tarfile.open(fileobj=archive) as content:
                 content.extractall(destination, filter="data")
         (destination / "ZOMBIE_UPSTREAM_COMMIT").write_text(actual + "\n")
-print("Optional service configuration prepared; secrets and existing provider inputs preserved.")
+print(
+    "Optional service configuration prepared; secrets and existing provider inputs preserved."
+)
