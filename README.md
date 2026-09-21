@@ -55,3 +55,8 @@ Settings → Receive Spotify / AirPlay arms the paired foreground client. It doe
 not provide credentials or turn process health into account/playback readiness.
 
 Dev.13: Packages the dev.13 shared retry/live-TS core; remote smoke includes live TS conversion.
+
+## dev.14 increment
+
+Packages dev.14 manifest adaptation; synthetic packaged FFmpeg coverage includes HLS TS/fMP4 and DASH template/static-list A/V conversion.
+The four requested block-1 changes are implemented; physical acceptance and broader product gates remain open.
