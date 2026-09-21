@@ -62,3 +62,7 @@ Packages dev.14 manifest adaptation; synthetic packaged FFmpeg coverage includes
 The four requested block-1 changes are implemented; physical acceptance and broader product gates remain open.
 
 Dev.16: Packages shared dev.16 gateway, YouTube, Spotify, AirPlay and browser workers. Unchanged receiver/Threadfin images retain prior pins.
+
+## License
+
+First-party code: [GPL-3.0-only](LICENSE). See [NOTICE](NOTICE) for third-party scope.

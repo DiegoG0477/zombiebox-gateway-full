@@ -38,3 +38,9 @@ The four requested block-1 changes are implemented; physical acceptance and broa
 
 Packages shared dev.16 gateway, YouTube, Spotify, AirPlay and browser workers. Unchanged receiver/Threadfin images retain prior pins.
 Product exit gates and physical/account acceptance remain open.
+
+## dev.17 increment
+
+Packages dev.17 images with first-party GPL notices. Core behavior remains shared with Edge.
+
+No product milestone or physical gate is closed.

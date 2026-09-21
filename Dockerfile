@@ -9,6 +9,7 @@ FROM alpine:3.23@sha256:85fe1e81d6758c208f3e1eed4338a1997e19d4be002d4dd32d3100c9
 RUN apk add --no-cache ffmpeg=8.0.1-r1
 COPY --from=build /zombied /zombied
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+COPY LICENSE NOTICE /usr/share/doc/zombiebox/
 USER 65532:65532
 EXPOSE 8090
 ENTRYPOINT ["/zombied"]
