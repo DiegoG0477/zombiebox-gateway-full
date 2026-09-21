@@ -1,16 +1,18 @@
 name: zombie-box-tv
 services:
   gateway:
-    image: zombie-box-tv/gateway:0.1.0-dev.3
+    image: zombie-box-tv/gateway:0.1.0-dev.4
     build:
       context: ..
       dockerfile: gateway-full/Dockerfile
+    command: ["-listen", "0.0.0.0:8090", "-state", "/data/gateway.db", "-media-dir", "/media", "-config", "/config/providers.json", "-relay-url", "http://mediamtx:8888", "-relay-control-url", "http://mediamtx:9997", "-media-tools"]
     user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
     ports:
       - "${ZOMBIE_BIND_IP:-127.0.0.1}:8090:8090"
     environment:
       GOMEMLIMIT: 192MiB
       GOMAXPROCS: "2"
+      ZOMBIE_RELAY_ADMIN_TOKEN: "${ZOMBIE_RELAY_ADMIN_TOKEN:?Run make runtime-setup}"
       ZOMBIE_PAIRING_CODE: "${ZOMBIE_PAIRING_CODE:-}"
       ZOMBIE_IPTV_URL: "${ZOMBIE_IPTV_URL:-}"
       ZOMBIE_XMLTV_URL: "${ZOMBIE_XMLTV_URL:-}"
@@ -21,9 +23,9 @@ services:
       - ../.local/gateway/state:/data:Z
       - ../.local/gateway/media:/media:ro,Z
       - ../.local/gateway/config:/config:ro,Z
-    mem_limit: 256m
+    mem_limit: 512m
     cpus: 2.0
-    pids_limit: 64
+    pids_limit: 96
     read_only: true
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
@@ -55,4 +57,23 @@ services:
       interval: 30s
       timeout: 4s
       retries: 3
+    restart: unless-stopped
+
+  mediamtx:
+    image: bluenviron/mediamtx:1.21.1@sha256:dc22a8b09668e7f5b493cfa848c395349ad16fd47fef1cc7b7eb5b87a1186232
+    user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
+    ports:
+      - "${ZOMBIE_BIND_IP:-127.0.0.1}:8554:8554"
+    environment:
+      MTX_AUTHHTTPADDRESS: "http://gateway:8090/internal/relay/auth?key=${ZOMBIE_RELAY_ADMIN_TOKEN:?Run make runtime-setup}"
+      GOMEMLIMIT: 96MiB
+      GOMAXPROCS: "1"
+    volumes:
+      - ../wrappers/mediamtx/mediamtx.yml:/mediamtx.yml:ro,Z
+    mem_limit: 160m
+    cpus: 1.0
+    pids_limit: 32
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
     restart: unless-stopped

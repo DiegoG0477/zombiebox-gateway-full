@@ -10,6 +10,12 @@ fi
 if [[ ! -f "$runtime/compose.env" ]]; then
   printf 'ZOMBIE_UID=%s\nZOMBIE_GID=%s\n' "$(id -u)" "$(id -g)" > "$runtime/compose.env"
 fi
+python3 - "$runtime/compose.env" <<'PYTHON'
+import pathlib,secrets,sys
+p=pathlib.Path(sys.argv[1]);text=p.read_text()
+if not any(line.startswith('ZOMBIE_RELAY_ADMIN_TOKEN=') for line in text.splitlines()):
+    with p.open('a') as f:f.write('\nZOMBIE_RELAY_ADMIN_TOKEN='+secrets.token_hex(32)+'\n')
+PYTHON
 chmod 700 "$runtime" "$runtime/state" "$runtime/config" "$runtime/media"
 chmod 600 "$runtime/config/providers.json" "$runtime/compose.env"
 printf 'Runtime prepared at %s\n' "$runtime"
