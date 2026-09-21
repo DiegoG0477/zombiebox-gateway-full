@@ -10,4 +10,4 @@ Both public listeners default to localhost. For physical devices, set `ZOMBIE_BI
 
 Configure provider credentials from the paired client or private server JSON/environment: [services and credentials](../docs/development/services-and-credentials.md). Optional YouTube runs with `make youtube-up` and remains resource-limited. Existing configuration is preserved.
 
-See [mirroring](../docs/development/mirroring.md) for client/Cast installation and consent. Spotify Connect, UxPlay/AirPlay, Threadfin and Rebrowser are still pending integrations. They are not operational simply because their sources/configuration exist.
+See [mirroring](../docs/development/mirroring.md) for client/Cast installation and consent. Spotify Connect, UxPlay/AirPlay, Threadfin and Chromium Rebrowser now have optional pinned packages and gateway adapters. See their wrapper READMEs for account/device and feature gaps. `make services-build` prepares all images; `make services-up` enables them together. Heavy browser processes start only per session. The core default remains lightweight.

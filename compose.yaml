@@ -1,12 +1,13 @@
 name: zombie-box-tv
 services:
   gateway:
-    image: zombie-box-tv/gateway:0.1.0-dev.4
+    image: zombie-box-tv/gateway:0.1.0-dev.5
     build:
       context: ..
       dockerfile: gateway-full/Dockerfile
-    command: ["-listen", "0.0.0.0:8090", "-state", "/data/gateway.db", "-media-dir", "/media", "-config", "/config/providers.json", "-relay-url", "http://mediamtx:8888", "-relay-control-url", "http://mediamtx:9997", "-media-tools"]
+    command: ["-listen", "0.0.0.0:8090", "-state", "/data/gateway.db", "-media-dir", "/media", "-config", "/config/providers.json", "-relay-url", "http://mediamtx:8888", "-relay-control-url", "http://mediamtx:9997", "-media-tools", "-threadfin-url", "http://threadfin:34400"]
     user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
+    extra_hosts: ["host.docker.internal:host-gateway"]
     ports:
       - "${ZOMBIE_BIND_IP:-127.0.0.1}:8090:8090"
     environment:
@@ -58,6 +59,83 @@ services:
       timeout: 4s
       retries: 3
     restart: unless-stopped
+
+  spotify:
+    profiles: [spotify]
+    image: zombie-box-tv/spotify:0.1.0-dev.5
+    build:
+      context: ..
+      dockerfile: wrappers/spotify/Dockerfile
+    user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
+    volumes:
+      - ../.local/spotify/worker.json:/config/worker.json:ro,Z
+      - ../.local/spotify/state:/state:Z
+    mem_limit: 320m
+    cpus: 1.0
+    pids_limit: 48
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: "on-failure:5"
+
+  airplay:
+    profiles: [airplay]
+    image: zombie-box-tv/airplay:0.1.0-dev.5
+    build:
+      context: ..
+      dockerfile: wrappers/airplay/Dockerfile
+    network_mode: host
+    user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
+    volumes:
+      - ../.local/airplay/worker.json:/config/worker.json:ro,Z
+      - ../.local/airplay/state:/state:Z
+    mem_limit: 512m
+    cpus: 2.0
+    pids_limit: 64
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: "on-failure:5"
+
+  threadfin:
+    profiles: [threadfin]
+    image: zombie-box-tv/threadfin:0.1.0-dev.5
+    build:
+      context: ..
+      dockerfile: wrappers/threadfin/Dockerfile
+    user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
+    ports: ["127.0.0.1:34400:34400"]
+    volumes:
+      - ../.local/threadfin:/state:Z
+    tmpfs: ["/tmp:size=67108864,mode=1777"]
+    mem_limit: 256m
+    cpus: 1.0
+    pids_limit: 48
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: "on-failure:5"
+
+  rebrowser:
+    profiles: [rebrowser]
+    image: zombie-box-tv/rebrowser:0.1.0-dev.5
+    build:
+      context: ..
+      dockerfile: wrappers/rebrowser/Dockerfile
+    user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
+    init: true
+    volumes:
+      - ../.local/rebrowser/browser.json:/config/browser.json:ro,Z
+    tmpfs: ["/tmp:size=134217728,mode=1777"]
+    mem_limit: 768m
+    cpus: 1.5
+    pids_limit: 128
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+      - seccomp=../wrappers/rebrowser/seccomp_profile.json
+    restart: "on-failure:5"
 
   mediamtx:
     image: bluenviron/mediamtx:1.21.1@sha256:dc22a8b09668e7f5b493cfa848c395349ad16fd47fef1cc7b7eb5b87a1186232
