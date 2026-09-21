@@ -1,7 +1,7 @@
 name: zombie-box-tv
 services:
   gateway:
-    image: zombie-box-tv/gateway:0.1.0-dev.6
+    image: zombie-box-tv/gateway:0.1.0-dev.7
     build:
       context: ..
       dockerfile: gateway-full/Dockerfile
@@ -60,6 +60,24 @@ services:
       timeout: 4s
       retries: 3
     restart: unless-stopped
+
+  youtube-receiver:
+    profiles: [youtube-receiver]
+    image: zombie-box-tv/youtube-receiver:0.1.0-dev.7
+    build:
+      context: ..
+      dockerfile: wrappers/youtube-receiver/Dockerfile
+    network_mode: host
+    user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
+    volumes:
+      - ../.local/youtube-receiver:/config:ro,Z
+    mem_limit: 320m
+    cpus: 1.0
+    pids_limit: 48
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: "on-failure:5"
 
   spotify:
     profiles: [spotify]

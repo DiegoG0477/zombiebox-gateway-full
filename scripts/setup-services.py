@@ -10,7 +10,7 @@ import tarfile
 import tempfile
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--enable", choices=("spotify", "airplay", "threadfin", "rebrowser"))
+parser.add_argument("--enable", choices=("spotify", "airplay", "threadfin", "rebrowser", "youtube_receiver"))
 parser.add_argument("--sources", action="store_true")
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
@@ -24,6 +24,15 @@ def write(path, value):
 
 provider_file = root / ".local/gateway/config/providers.json"
 providers = json.loads(provider_file.read_text())
+receiver_folder = root / ".local/youtube-receiver"
+receiver_folder.mkdir(parents=True, exist_ok=True)
+receiver_config = receiver_folder / "receiver.json"
+if not receiver_config.exists():
+    write(receiver_config, {"token": secrets.token_hex(32), "listen": "0.0.0.0", "port": 8095, "dialPort": 8096})
+if "youtube_receiver" not in providers:
+    providers["youtube_receiver"] = {"enabled": args.enable == "youtube_receiver", "url": "http://host.docker.internal:8095", "token": json.loads(receiver_config.read_text())["token"]}
+elif args.enable == "youtube_receiver":
+    providers["youtube_receiver"]["enabled"] = True
 browser_folder = root / ".local/rebrowser"
 browser_folder.mkdir(parents=True, exist_ok=True)
 browser_config = browser_folder / "browser.json"
