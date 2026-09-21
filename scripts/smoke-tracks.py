@@ -9,7 +9,7 @@ import urllib.request
 import uuid
 from pathlib import Path
 
-IMAGE = "zombie-box-tv/gateway:0.1.0-dev.10"
+IMAGE = "zombie-box-tv/gateway:0.1.0-dev.11"
 
 
 def command(*args):
@@ -87,7 +87,7 @@ def exercise(base, folder):
         "/v1/devices/register",
         {
             "installationId": "tracks-smoke-device",
-            "clientVersion": "dev.10-smoke",
+            "clientVersion": "dev.11-smoke",
             "protocolVersion": 1,
             "pairingCode": "123456",
             "platform": {"androidApi": 13},

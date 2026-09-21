@@ -1,7 +1,7 @@
 name: zombie-box-tv
 services:
   gateway:
-    image: zombie-box-tv/gateway:0.1.0-dev.10
+    image: zombie-box-tv/gateway:0.1.0-dev.11
     build:
       context: ${ZOMBIE_CORE_DIR:-../gateway-core}
       dockerfile: ${ZOMBIE_FULL_DIR:-../gateway-full}/Dockerfile
@@ -59,7 +59,7 @@ services:
 
   youtube:
     profiles: [youtube]
-    image: zombie-box-tv/youtube:0.1.0-dev.9
+    image: zombie-box-tv/youtube:0.1.0-dev.11
     build:
       context: ${ZOMBIE_CORE_DIR:-../gateway-core}
       dockerfile: wrappers/youtube/Dockerfile

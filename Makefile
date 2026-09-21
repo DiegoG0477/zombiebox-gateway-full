@@ -34,3 +34,7 @@ down:
 .PHONY: tracks-smoke
 tracks-smoke:
 	python3 scripts/smoke-tracks.py
+
+.PHONY: remote-smoke
+remote-smoke:
+	bash scripts/smoke-remote.sh

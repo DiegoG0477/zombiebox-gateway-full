@@ -14,3 +14,8 @@ and evolve shared protocol contracts in their owning repository.
 Keep a separate validation track for hardware/account/latency/memory evidence.
 Use development checkpoint tags until complete exit gates are evidenced. Hosted
 issues/milestones can be attached to the shared GitHub Project once remotes exist.
+
+## dev.11 increment
+
+Gateway and YouTube dev.11 image pins, shared remote/browse implementation and synthetic packaged FFmpeg smoke. Running services are not automatically replaced.
+No product milestone or physical/account gate is completed by this checkpoint.

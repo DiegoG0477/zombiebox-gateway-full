@@ -41,3 +41,10 @@ Dev.10 packages the core's local audio-track selection and text-subtitle endpoin
 Only the gateway image advances to `0.1.0-dev.10`; unchanged service images retain
 their `dev.9` pins. These features require local media and FFmpeg. Remote tracks,
 automatic language choice and bitmap burn-in remain pending.
+
+Dev.11 advances the gateway and YouTube images for hierarchical provider browsing
+and progressive remote adaptation/adaptive mux. `make remote-smoke` runs synthetic
+HTTP A/V fixtures inside the packaged FFmpeg image with no external network.
+`make tracks-smoke` retains the authenticated HTTP local-track regression gate.
+Building an image does not replace a running container; existing services must be
+recreated explicitly to consume the new image.
