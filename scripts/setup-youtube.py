@@ -4,8 +4,8 @@
 import argparse
 import json
 import os
-from pathlib import Path
 import secrets
+from pathlib import Path
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--enable", action="store_true")

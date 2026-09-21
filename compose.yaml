@@ -1,7 +1,7 @@
 name: zombie-box-tv
 services:
   gateway:
-    image: zombie-box-tv/gateway:0.1.0-dev.7
+    image: zombie-box-tv/gateway:0.1.0-dev.8
     build:
       context: ..
       dockerfile: gateway-full/Dockerfile
@@ -88,7 +88,7 @@ services:
 
   youtube-receiver:
     profiles: [youtube-receiver]
-    image: zombie-box-tv/youtube-receiver:0.1.0-dev.7
+    image: zombie-box-tv/youtube-receiver:0.1.0-dev.8
     build:
       context: ..
       dockerfile: wrappers/youtube-receiver/Dockerfile
@@ -162,7 +162,7 @@ services:
 
   rebrowser:
     profiles: [rebrowser]
-    image: zombie-box-tv/rebrowser:0.1.0-dev.5
+    image: zombie-box-tv/rebrowser:0.1.0-dev.8
     build:
       context: ..
       dockerfile: wrappers/rebrowser/Dockerfile
