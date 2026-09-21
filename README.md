@@ -81,3 +81,8 @@ Dev.21: Packages shared dev.21 network/search/state maintenance; unchanged optio
 
 Packages the shared dev.22 receiver-coordination core; optional workers retain their version pins.
 No product or physical acceptance gate closes.
+
+## dev.23 increment
+
+LAN HTTP defaults and a constrained host-network discovery sidecar; make up prepares and builds the pinned core.
+No product or physical acceptance gate closes.

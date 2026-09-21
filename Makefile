@@ -26,7 +26,9 @@ check: setup
 	$(COMPOSE) --profile youtube --profile youtube-receiver --profile spotify --profile airplay --profile threadfin --profile rebrowser config --quiet
 build: setup
 	$(COMPOSE) build gateway
-up: setup
+up: deps
+	$(MAKE) setup
+	$(COMPOSE) build gateway
 	$(COMPOSE) up -d
 down:
 	$(COMPOSE) down

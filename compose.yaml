@@ -1,7 +1,7 @@
 name: zombie-box-tv
 services:
   gateway:
-    image: zombie-box-tv/gateway:0.1.0-dev.22
+    image: zombie-box-tv/gateway:0.1.0-dev.23
     build:
       context: ${ZOMBIE_CORE_DIR:-../gateway-core}
       dockerfile: ${ZOMBIE_FULL_DIR:-../gateway-full}/Dockerfile
@@ -28,7 +28,7 @@ services:
     user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
     extra_hosts: ["host.docker.internal:host-gateway"]
     ports:
-      - "${ZOMBIE_BIND_IP:-127.0.0.1}:8090:8090"
+      - "${ZOMBIE_BIND_IP:-0.0.0.0}:8090:8090"
     environment:
       GOMEMLIMIT: 192MiB
       GOMAXPROCS: "2"
@@ -55,6 +55,32 @@ services:
       interval: 15s
       timeout: 4s
       retries: 3
+    restart: unless-stopped
+
+  discovery:
+    image: zombie-box-tv/gateway:0.1.0-dev.23
+    network_mode: host
+    command:
+      [
+        "-discovery-only",
+        "-discovery-listen",
+        "${ZOMBIE_DISCOVERY_BIND_IP:-${ZOMBIE_BIND_IP:-0.0.0.0}}:8098",
+        "-discovery-http-port",
+        "8090",
+      ]
+    depends_on:
+      gateway:
+        condition: service_healthy
+    user: "65532:65532"
+    mem_limit: 48m
+    cpus: 0.25
+    pids_limit: 16
+    environment:
+      GOMEMLIMIT: 24MiB
+      GOMAXPROCS: "1"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
     restart: unless-stopped
 
   youtube:

@@ -62,3 +62,8 @@ Packages the shared dev.22 receiver-coordination core; optional workers retain t
 No product or physical acceptance gate closes.
 
 Verification: Compose configuration, Full image build, packaged track/remote-media checks and isolated startup/pairing/restart smoke pass on Fedora.
+
+## dev.23 increment
+
+Trusted-LAN HTTP default and constrained host-network discovery sidecar; make up prepares/builds exact core.
+Product exit gates and deferred physical acceptance remain open.

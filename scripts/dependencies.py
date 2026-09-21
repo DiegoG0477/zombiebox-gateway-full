@@ -25,6 +25,9 @@ def main():
         if override
         else (sibling if sibling.is_dir() else ROOT / ".deps" / args.name)
     )
+    if args.action == "path":
+        print(path)
+        return
     if not (path / ".git").exists():
         if args.action != "fetch" or not item.get("remote"):
             raise SystemExit(
