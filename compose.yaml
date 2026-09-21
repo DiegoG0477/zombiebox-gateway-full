@@ -1,11 +1,11 @@
 name: zombie-box-tv
 services:
   gateway:
-    image: zombie-box-tv/gateway:0.1.0-dev.5
+    image: zombie-box-tv/gateway:0.1.0-dev.6
     build:
       context: ..
       dockerfile: gateway-full/Dockerfile
-    command: ["-listen", "0.0.0.0:8090", "-state", "/data/gateway.db", "-media-dir", "/media", "-config", "/config/providers.json", "-relay-url", "http://mediamtx:8888", "-relay-control-url", "http://mediamtx:9997", "-media-tools", "-threadfin-url", "http://threadfin:34400"]
+    command: ["-listen", "0.0.0.0:8090", "-state", "/data/gateway.db", "-media-dir", "/media", "-config", "/config/providers.json", "-relay-url", "http://mediamtx:8888", "-relay-control-url", "http://mediamtx:9997", "-media-tools", "-probe-dir", "/probes", "-threadfin-url", "http://threadfin:34400"]
     user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
     extra_hosts: ["host.docker.internal:host-gateway"]
     ports:
@@ -23,6 +23,7 @@ services:
     volumes:
       - ../.local/gateway/state:/data:Z
       - ../.local/gateway/media:/media:ro,Z
+      - ../.local/gateway/probes:/probes:ro,Z
       - ../.local/gateway/config:/config:ro,Z
     mem_limit: 512m
     cpus: 2.0
