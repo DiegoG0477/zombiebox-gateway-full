@@ -48,3 +48,8 @@ HTTP A/V fixtures inside the packaged FFmpeg image with no external network.
 `make tracks-smoke` retains the authenticated HTTP local-track regression gate.
 Building an image does not replace a running container; existing services must be
 recreated explicitly to consume the new image.
+
+Dev.12 packages selected-client media reception and Cast encoder budgets in the
+gateway image. YouTube remains dev.11; unchanged worker images keep their pins.
+Settings → Receive Spotify / AirPlay arms the paired foreground client. It does
+not provide credentials or turn process health into account/playback readiness.

@@ -19,3 +19,7 @@ issues/milestones can be attached to the shared GitHub Project once remotes exis
 
 Gateway and YouTube dev.11 image pins, shared remote/browse implementation and synthetic packaged FFmpeg smoke. Running services are not automatically replaced.
 No product milestone or physical/account gate is completed by this checkpoint.
+
+## dev.12 increment
+
+Packages shared reception and Cast budgets. Gateway image dev.12, YouTube dev.11, other worker pins unchanged.
