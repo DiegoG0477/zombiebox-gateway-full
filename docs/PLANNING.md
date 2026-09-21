@@ -23,3 +23,8 @@ No product milestone or physical/account gate is completed by this checkpoint.
 ## dev.12 increment
 
 Packages shared reception and Cast budgets. Gateway image dev.12, YouTube dev.11, other worker pins unchanged.
+
+## dev.13 increment
+
+Packages the dev.13 shared retry/live-TS core; remote smoke includes live TS conversion.
+No product milestone or physical/account gate closes with this checkpoint.

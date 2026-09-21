@@ -6,7 +6,8 @@
     "Local component scope; product exit gates remain open. No hosted milestones exist.",
     "Dev.10: shared local media tracks/text subtitles and client Home refinement. Cast consumes the protocol transport update. Product exit gates remain open.",
     "Dev.11: Gateway and YouTube dev.11 image pins, shared remote/browse implementation and synthetic packaged FFmpeg smoke. Running services are not automatically replaced. Product exit gates remain open.",
-    "Dev.12: Packages shared reception and Cast budgets. Gateway image dev.12, YouTube dev.11, other worker pins unchanged."
+    "Dev.12: Packages shared reception and Cast budgets. Gateway image dev.12, YouTube dev.11, other worker pins unchanged.",
+    "Dev.13: Packages the dev.13 shared retry/live-TS core; remote smoke includes live TS conversion. Product exit gates remain open."
   ],
   "milestones": [
     {
@@ -52,5 +53,5 @@
       "remoteId": null
     }
   ],
-  "developmentCheckpoint": "v0.1.0-dev.12"
+  "developmentCheckpoint": "v0.1.0-dev.13"
 }

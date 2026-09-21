@@ -53,3 +53,5 @@ Dev.12 packages selected-client media reception and Cast encoder budgets in the
 gateway image. YouTube remains dev.11; unchanged worker images keep their pins.
 Settings → Receive Spotify / AirPlay arms the paired foreground client. It does
 not provide credentials or turn process health into account/playback readiness.
+
+Dev.13: Packages the dev.13 shared retry/live-TS core; remote smoke includes live TS conversion.
