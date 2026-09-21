@@ -44,3 +44,7 @@ Product exit gates and physical/account acceptance remain open.
 Packages dev.17 images with first-party GPL notices. Core behavior remains shared with Edge.
 
 No product milestone or physical gate is closed.
+
+## dev.18 increment
+
+Dev.18: bounded persistent artwork derivatives, restart reuse, private cache keys, device/layout profiles and conditional HTTP caching. No physical milestone closes.

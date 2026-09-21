@@ -1,7 +1,7 @@
 name: zombie-box-tv
 services:
   gateway:
-    image: zombie-box-tv/gateway:0.1.0-dev.17
+    image: zombie-box-tv/gateway:0.1.0-dev.18
     build:
       context: ${ZOMBIE_CORE_DIR:-../gateway-core}
       dockerfile: ${ZOMBIE_FULL_DIR:-../gateway-full}/Dockerfile
