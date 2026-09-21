@@ -74,3 +74,5 @@ persistence. Source URLs/credentials/original images are not stored in cache fil
 Dev.19: Packages dev.19 shared media, EPG, diagnostics and SQLite migration core; unchanged workers retain their existing image pins.
 
 Dev.20: Packages shared dev.20 handoff and low-bandwidth conversion. Unchanged worker image pins are retained.
+
+Dev.21: Packages shared dev.21 network/search/state maintenance; unchanged optional workers retain their image pins.

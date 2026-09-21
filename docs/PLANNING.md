@@ -48,3 +48,10 @@ No product milestone or physical gate is closed.
 ## dev.18 increment
 
 Dev.18: bounded persistent artwork derivatives, restart reuse, private cache keys, device/layout profiles and conditional HTTP caching. No physical milestone closes.
+
+## dev.21 increment
+
+Packages shared dev.21 network/search/state maintenance; unchanged optional workers retain their image pins.
+No physical, account or product milestone closes.
+
+Verification: Compose configuration, image build, isolated startup/pairing/restart persistence, packaged track/subtitle conversion and remote-media checks pass on Fedora. This does not validate account or physical A/V behavior.
