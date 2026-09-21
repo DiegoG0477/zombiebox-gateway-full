@@ -30,3 +30,7 @@ up: setup
 	$(COMPOSE) up -d
 down:
 	$(COMPOSE) down
+
+.PHONY: tracks-smoke
+tracks-smoke:
+	python3 scripts/smoke-tracks.py
