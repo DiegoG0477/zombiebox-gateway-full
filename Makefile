@@ -20,9 +20,12 @@ setup:
 	python3 scripts/setup-youtube.py
 	python3 scripts/setup-services.py
 	python3 $(ZOMBIE_CORE_DIR)/scripts/generate-probes.py --output $(ZOMBIE_RUNTIME_ROOT)/.local/gateway/probes
+	python3 $(ZOMBIE_CORE_DIR)/scripts/generate-extended-probes.py --output $(ZOMBIE_RUNTIME_ROOT)/.local/gateway/probes
 sources: setup
 	python3 scripts/setup-services.py --sources
 check: setup
+	bash -n install.sh
+	python3 -m unittest discover -s tests
 	$(COMPOSE) --profile youtube --profile youtube-receiver --profile spotify --profile airplay --profile threadfin --profile rebrowser config --quiet
 build: setup
 	$(COMPOSE) build gateway

@@ -75,3 +75,7 @@ Packages the shared companion core in dev.24 and includes the QR encoder license
 Full visual/capture policy, extended Remote, HEVC/4K and other product gates remain open; physical acceptance stays deferred.
 
 Verification: All Compose profiles validate and the dev.24 image builds with the QR encoder license. The existing dev.22 service remains healthy and unchanged.
+
+## dev.25 increment
+
+One-command source/release installation, preserved private runtime, digest-only source-free bundle preparation and extended fixtures. Real hosted image digests/publication remain pending.

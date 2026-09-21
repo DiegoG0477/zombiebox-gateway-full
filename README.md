@@ -7,6 +7,65 @@ releases are not configured yet; local commits/tags and dependency pins are real
 
 Depends on the exact gateway-core commit in `dependencies.lock.json`.
 
+## Installation
+
+### Available now: local/source checkout
+
+Requirements: Linux, Docker Engine with Compose v2, Python3, Git and FFmpeg with
+libx264/libx265 for synthetic diagnostics. Source dependencies use the exact core
+pin. In the existing workspace the sibling checkout is found automatically;
+standalone cloning needs a real core remote configured in `dependencies.lock.json`.
+
+```sh
+bash install.sh
+```
+
+The installer prepares private configuration, builds the core image, starts core,
+relay and LAN discovery, and waits for health. Credentials/SQLite/media survive
+reinstallation. The Client lists discovered gateways; configure accounts/M3U in
+Client Settings or the private `config/providers.json` under the printed runtime.
+Use `--prepare-only` to generate/review configuration without starting services.
+
+Default runtime: `${XDG_DATA_HOME:-$HOME/.local/share}/zombiebox/full`. To reuse the
+central workspace's current runtime, run from that workspace:
+
+```sh
+ZOMBIE_RUNTIME_ROOT="$PWD" bash gateway-full/install.sh
+```
+
+Optional workers are explicit to fit small hosts:
+
+```sh
+bash install.sh --profile youtube --profile spotify
+```
+
+Supported profiles: `youtube`, `youtube-receiver`, `spotify`, `airplay`, `threadfin`,
+`rebrowser`. Source builds of Spotify/AirPlay/Threadfin require their locked
+references (`make -C ../gateway-core references`). Enabling a worker does not supply
+accounts or certify receiver compatibility. Existing provider URLs/tokens are kept.
+
+Only discovery and receivers that need LAN multicast use host networking. Core and
+ordinary workers retain their private Compose network and resource limits. Permit
+TCP8090, TCP8554 (authenticated Cast publishing) and UDP8098 on the trusted LAN in your firewall; the installer does not
+change the firewall. Broadcast can be blocked by Wi-Fi isolation; manual URL works
+as fallback. RTSP defaults to the LAN bind so a paired phone can publish; set
+`ZOMBIE_RTSP_BIND_IP` in the private Compose env file to restrict it separately.
+Relay control/HLS ports stay inside Compose and are not published to the LAN.
+
+### Prebuilt release bundle (first publication pending)
+
+The maintainer runs `scripts/release-bundle.py --images images.json --output DIR`
+with actual reviewed `ghcr.io/...@sha256:...` references for every first-party
+service. The generated bundle contains Compose, configuration helpers, relay/browser
+configuration, diagnostic media and checksums. It has no source build dependency.
+After downloading and verifying the published bundle, run the same `bash install.sh`.
+It pulls pinned images and starts configured services; no Go, source clones or
+FFmpeg encoder is required on the user's Linux host.
+
+No public image name or download command is advertised as working before that
+publication exists. Compose is the complete installation path; a bare `docker run`
+command omits relay/discovery/worker configuration and is not equivalent.
+
 ```sh
 make deps-check  # uses ../gateway-core or ZOMBIE_CORE_DIR
 make setup      # private defaults, preserves existing credentials
@@ -92,3 +151,7 @@ No product or physical acceptance gate closes.
 
 Packages the shared companion core in dev.24 and includes the QR encoder license. Existing running services are not automatically replaced.
 Full visual/capture policy, extended Remote, HEVC/4K and other product gates remain open; physical acceptance stays deferred.
+
+## dev.25 increment
+
+One-command source/release installation, preserved private runtime, digest-only source-free bundle preparation and extended fixtures. Real hosted image digests/publication remain pending.
