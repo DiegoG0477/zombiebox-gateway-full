@@ -60,3 +60,5 @@ Dev.13: Packages the dev.13 shared retry/live-TS core; remote smoke includes liv
 
 Packages dev.14 manifest adaptation; synthetic packaged FFmpeg coverage includes HLS TS/fMP4 and DASH template/static-list A/V conversion.
 The four requested block-1 changes are implemented; physical acceptance and broader product gates remain open.
+
+Dev.16: Packages shared dev.16 gateway, YouTube, Spotify, AirPlay and browser workers. Unchanged receiver/Threadfin images retain prior pins.

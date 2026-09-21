@@ -33,3 +33,8 @@ No product milestone or physical/account gate closes with this checkpoint.
 
 Packages dev.14 manifest adaptation; synthetic packaged FFmpeg coverage includes HLS TS/fMP4 and DASH template/static-list A/V conversion.
 The four requested block-1 changes are implemented; physical acceptance and broader product gates remain open.
+
+## dev.16 increment
+
+Packages shared dev.16 gateway, YouTube, Spotify, AirPlay and browser workers. Unchanged receiver/Threadfin images retain prior pins.
+Product exit gates and physical/account acceptance remain open.

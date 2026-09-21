@@ -9,7 +9,8 @@
     "Dev.12: Packages shared reception and Cast budgets. Gateway image dev.12, YouTube dev.11, other worker pins unchanged.",
     "Dev.13: Packages the dev.13 shared retry/live-TS core; remote smoke includes live TS conversion. Product exit gates remain open.",
     "Dev.14: Packages dev.14 manifest adaptation; synthetic packaged FFmpeg coverage includes HLS TS/fMP4 and DASH template/static-list A/V conversion. Product exit gates remain open.",
-    "Dev.15: Pins the manifest case/encoding guards following dev.14; existing tags remain immutable."
+    "Dev.15: Pins the manifest case/encoding guards following dev.14; existing tags remain immutable.",
+    "Dev.16: Packages shared dev.16 gateway, YouTube, Spotify, AirPlay and browser workers. Unchanged receiver/Threadfin images retain prior pins. No product milestone closes."
   ],
   "milestones": [
     {
@@ -55,5 +56,5 @@
       "remoteId": null
     }
   ],
-  "developmentCheckpoint": "v0.1.0-dev.13"
+  "developmentCheckpoint": "v0.1.0-dev.16"
 }
