@@ -1,17 +1,20 @@
 """Create build contexts from exactly the locked source, never a dirty checkout."""
 
 import json
+import os
 import subprocess
 import tarfile
 import tempfile
+from pathlib import Path
 
 
 def prepare_sources(root, names):
-    lock = json.loads((root / "third_party/upstreams.lock.json").read_text())
+    core = Path(os.environ["ZOMBIE_CORE_DIR"])
+    lock = json.loads((core / "third_party/upstreams.lock.json").read_text())
     for entry in lock["repositories"]:
         if entry["name"] not in names:
             continue
-        source = root / "third_party/sources" / entry["name"]
+        source = core / "third_party/sources" / entry["name"]
         actual = subprocess.check_output(
             ["git", "-C", str(source), "rev-parse", "HEAD"], text=True
         ).strip()

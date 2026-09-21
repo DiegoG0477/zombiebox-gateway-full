@@ -1,10 +1,10 @@
 name: zombie-box-tv
 services:
   gateway:
-    image: zombie-box-tv/gateway:0.1.0-dev.8
+    image: zombie-box-tv/gateway:0.1.0-dev.9
     build:
-      context: ..
-      dockerfile: gateway-full/Dockerfile
+      context: ${ZOMBIE_CORE_DIR:-../gateway-core}
+      dockerfile: ${ZOMBIE_FULL_DIR:-../gateway-full}/Dockerfile
     command:
       [
         "-listen",
@@ -40,10 +40,10 @@ services:
       ZOMBIE_JELLYFIN_TOKEN: "${ZOMBIE_JELLYFIN_TOKEN:-}"
       ZOMBIE_JELLYFIN_USER_ID: "${ZOMBIE_JELLYFIN_USER_ID:-}"
     volumes:
-      - ../.local/gateway/state:/data:Z
-      - ../.local/gateway/media:/media:ro,Z
-      - ../.local/gateway/probes:/probes:ro,Z
-      - ../.local/gateway/config:/config:ro,Z
+      - ${ZOMBIE_RUNTIME_ROOT:-.}/.local/gateway/state:/data:Z
+      - ${ZOMBIE_RUNTIME_ROOT:-.}/.local/gateway/media:/media:ro,Z
+      - ${ZOMBIE_RUNTIME_ROOT:-.}/.local/gateway/probes:/probes:ro,Z
+      - ${ZOMBIE_RUNTIME_ROOT:-.}/.local/gateway/config:/config:ro,Z
     mem_limit: 512m
     cpus: 2.0
     pids_limit: 96
@@ -59,13 +59,13 @@ services:
 
   youtube:
     profiles: [youtube]
-    image: zombie-box-tv/youtube:0.1.0-dev.3
+    image: zombie-box-tv/youtube:0.1.0-dev.9
     build:
-      context: ..
+      context: ${ZOMBIE_CORE_DIR:-../gateway-core}
       dockerfile: wrappers/youtube/Dockerfile
     user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
     volumes:
-      - ../.local/youtube:/config:ro,Z
+      - ${ZOMBIE_RUNTIME_ROOT:-.}/.local/youtube:/config:ro,Z
     expose: [8091]
     mem_limit: 320m
     cpus: 1.0
@@ -88,14 +88,14 @@ services:
 
   youtube-receiver:
     profiles: [youtube-receiver]
-    image: zombie-box-tv/youtube-receiver:0.1.0-dev.8
+    image: zombie-box-tv/youtube-receiver:0.1.0-dev.9
     build:
-      context: ..
+      context: ${ZOMBIE_CORE_DIR:-../gateway-core}
       dockerfile: wrappers/youtube-receiver/Dockerfile
     network_mode: host
     user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
     volumes:
-      - ../.local/youtube-receiver:/config:ro,Z
+      - ${ZOMBIE_RUNTIME_ROOT:-.}/.local/youtube-receiver:/config:ro,Z
     mem_limit: 320m
     cpus: 1.0
     pids_limit: 48
@@ -106,14 +106,16 @@ services:
 
   spotify:
     profiles: [spotify]
-    image: zombie-box-tv/spotify:0.1.0-dev.5
+    image: zombie-box-tv/spotify:0.1.0-dev.9
     build:
-      context: ..
+      context: ${ZOMBIE_CORE_DIR:-../gateway-core}
       dockerfile: wrappers/spotify/Dockerfile
+      additional_contexts:
+        sources: ${ZOMBIE_RUNTIME_ROOT:-.}/.local/build-sources
     user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
     volumes:
-      - ../.local/spotify/worker.json:/config/worker.json:ro,Z
-      - ../.local/spotify/state:/state:Z
+      - ${ZOMBIE_RUNTIME_ROOT:-.}/.local/spotify/worker.json:/config/worker.json:ro,Z
+      - ${ZOMBIE_RUNTIME_ROOT:-.}/.local/spotify/state:/state:Z
     mem_limit: 320m
     cpus: 1.0
     pids_limit: 48
@@ -124,15 +126,17 @@ services:
 
   airplay:
     profiles: [airplay]
-    image: zombie-box-tv/airplay:0.1.0-dev.5
+    image: zombie-box-tv/airplay:0.1.0-dev.9
     build:
-      context: ..
+      context: ${ZOMBIE_CORE_DIR:-../gateway-core}
       dockerfile: wrappers/airplay/Dockerfile
+      additional_contexts:
+        sources: ${ZOMBIE_RUNTIME_ROOT:-.}/.local/build-sources
     network_mode: host
     user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
     volumes:
-      - ../.local/airplay/worker.json:/config/worker.json:ro,Z
-      - ../.local/airplay/state:/state:Z
+      - ${ZOMBIE_RUNTIME_ROOT:-.}/.local/airplay/worker.json:/config/worker.json:ro,Z
+      - ${ZOMBIE_RUNTIME_ROOT:-.}/.local/airplay/state:/state:Z
     mem_limit: 512m
     cpus: 2.0
     pids_limit: 64
@@ -143,14 +147,16 @@ services:
 
   threadfin:
     profiles: [threadfin]
-    image: zombie-box-tv/threadfin:0.1.0-dev.5
+    image: zombie-box-tv/threadfin:0.1.0-dev.9
     build:
-      context: ..
+      context: ${ZOMBIE_CORE_DIR:-../gateway-core}
       dockerfile: wrappers/threadfin/Dockerfile
+      additional_contexts:
+        sources: ${ZOMBIE_RUNTIME_ROOT:-.}/.local/build-sources
     user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
     ports: ["127.0.0.1:34400:34400"]
     volumes:
-      - ../.local/threadfin:/state:Z
+      - ${ZOMBIE_RUNTIME_ROOT:-.}/.local/threadfin:/state:Z
     tmpfs: ["/tmp:size=67108864,mode=1777"]
     mem_limit: 256m
     cpus: 1.0
@@ -162,14 +168,14 @@ services:
 
   rebrowser:
     profiles: [rebrowser]
-    image: zombie-box-tv/rebrowser:0.1.0-dev.8
+    image: zombie-box-tv/rebrowser:0.1.0-dev.9
     build:
-      context: ..
+      context: ${ZOMBIE_CORE_DIR:-../gateway-core}
       dockerfile: wrappers/rebrowser/Dockerfile
     user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
     init: true
     volumes:
-      - ../.local/rebrowser/browser.json:/config/browser.json:ro,Z
+      - ${ZOMBIE_RUNTIME_ROOT:-.}/.local/rebrowser/browser.json:/config/browser.json:ro,Z
     tmpfs: ["/tmp:size=134217728,mode=1777"]
     mem_limit: 768m
     cpus: 1.5
@@ -178,7 +184,7 @@ services:
     cap_drop: [ALL]
     security_opt:
       - no-new-privileges:true
-      - seccomp=../wrappers/rebrowser/seccomp_profile.json
+      - seccomp=${ZOMBIE_CORE_DIR:-../gateway-core}/wrappers/rebrowser/seccomp_profile.json
     restart: "on-failure:5"
 
   mediamtx:
@@ -191,7 +197,7 @@ services:
       GOMEMLIMIT: 96MiB
       GOMAXPROCS: "1"
     volumes:
-      - ../wrappers/mediamtx/mediamtx.yml:/mediamtx.yml:ro,Z
+      - ${ZOMBIE_CORE_DIR:-../gateway-core}/wrappers/mediamtx/mediamtx.yml:/mediamtx.yml:ro,Z
     mem_limit: 160m
     cpus: 1.0
     pids_limit: 32

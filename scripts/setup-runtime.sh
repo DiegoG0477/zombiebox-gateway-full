@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-repo=$(cd "$(dirname "$0")/.." && pwd)
+repo=${ZOMBIE_RUNTIME_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}
 umask 077
 runtime="$repo/.local/gateway"
 mkdir -p "$runtime/state" "$runtime/config" "$runtime/media"
@@ -21,4 +21,4 @@ chmod 600 "$runtime/config/providers.json" "$runtime/compose.env"
 printf 'Runtime prepared at %s\n' "$runtime"
 printf 'Configure providers through client Settings or config/providers.json. Existing configuration is preserved.\n'
 
-mkdir -p .local/gateway/probes
+mkdir -p "$runtime/probes"

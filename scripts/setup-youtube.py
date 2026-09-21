@@ -11,7 +11,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--enable", action="store_true")
 parser.add_argument("--native", action="store_true")
 args = parser.parse_args()
-root = Path(__file__).resolve().parents[1]
+root = Path(os.environ.get("ZOMBIE_RUNTIME_ROOT", Path(__file__).resolve().parents[1]))
 os.umask(0o077)
 directory = root / ".local/youtube"
 directory.mkdir(parents=True, exist_ok=True)

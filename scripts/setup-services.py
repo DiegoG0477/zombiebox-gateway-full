@@ -106,7 +106,15 @@ def main():
     args = parser.parse_args()
     os.umask(0o077)
     try:
-        prepare(Path(__file__).resolve().parents[1], args.enable, args.sources)
+        prepare(
+            Path(
+                os.environ.get(
+                    "ZOMBIE_RUNTIME_ROOT", Path(__file__).resolve().parents[1]
+                )
+            ),
+            args.enable,
+            args.sources,
+        )
     except ValueError as error:
         raise SystemExit(str(error)) from None
     print(
