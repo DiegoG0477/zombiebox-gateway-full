@@ -2,7 +2,14 @@
 # Source checkout or prebuilt release bundle; configuration lives outside either.
 set -euo pipefail
 component=$(cd "$(dirname "$0")" && pwd)
-export ZOMBIE_RUNTIME_ROOT=${ZOMBIE_RUNTIME_ROOT:-${XDG_DATA_HOME:-$HOME/.local/share}/zombiebox/full}
+runtime_name=full
+project_name=zombie-box-tv
+if [[ -f "$component/images.lock.json" ]]; then
+    runtime_name=full-test
+    project_name=zombie-full-test
+fi
+export ZOMBIE_RUNTIME_ROOT=${ZOMBIE_RUNTIME_ROOT:-${XDG_DATA_HOME:-$HOME/.local/share}/zombiebox/$runtime_name}
+export ZOMBIE_COMPOSE_PROJECT=${ZOMBIE_COMPOSE_PROJECT:-$project_name}
 export ZOMBIE_FULL_DIR=$component
 profiles=()
 prepare_only=false
@@ -69,13 +76,15 @@ for profile in "${profiles[@]}"; do
         python3 scripts/setup-services.py --enable "${profile//-/_}"
     fi
 done
-compose=(docker compose --project-name zombie-box-tv --project-directory "$component" --env-file "$ZOMBIE_RUNTIME_ROOT/.local/gateway/compose.env" -f "$composition" "${options[@]}")
+compose=(docker compose --project-name "$ZOMBIE_COMPOSE_PROJECT" --project-directory "$component" --env-file "$ZOMBIE_RUNTIME_ROOT/.local/gateway/compose.env" -f "$composition" "${options[@]}")
 "${compose[@]}" config --quiet
 if $prepare_only; then
     echo "Configuration prepared. Nothing started. Runtime: $ZOMBIE_RUNTIME_ROOT"
     exit
 fi
-if [[ -f release.compose.json ]]; then
+if [[ -f images.lock.json ]]; then
+    python3 scripts/load-images.py
+elif [[ -f release.compose.json ]]; then
     "${compose[@]}" pull --quiet
 else
     if [[ " ${profiles[*]} " =~ (spotify|airplay|threadfin) ]]; then
@@ -83,5 +92,5 @@ else
     fi
     "${compose[@]}" build
 fi
-"${compose[@]}" up -d --wait --wait-timeout 120
+"${compose[@]}" up -d --no-build --wait --wait-timeout 120
 printf 'Gateway started. Open Client and select the discovered gateway, then configure providers in Settings.\nPrivate runtime: %s\n' "$ZOMBIE_RUNTIME_ROOT"

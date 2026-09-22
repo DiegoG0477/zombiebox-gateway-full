@@ -24,7 +24,7 @@ setup:
 sources: setup
 	python3 scripts/setup-services.py --sources
 check: setup
-	bash -n install.sh
+	bash -n install.sh control.sh
 	python3 -m unittest discover -s tests
 	$(COMPOSE) --profile youtube --profile youtube-receiver --profile spotify --profile airplay --profile threadfin --profile rebrowser config --quiet
 build: setup

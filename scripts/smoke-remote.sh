@@ -3,7 +3,7 @@
 set -euo pipefail
 full_dir=$(cd "$(dirname "$0")/.." && pwd)
 core_dir=${ZOMBIE_CORE_DIR:-$full_dir/../gateway-core}
-image=${ZOMBIE_SMOKE_IMAGE:-zombie-box-tv/gateway:0.1.0-dev.22}
+image=${ZOMBIE_SMOKE_IMAGE:-zombie-box-tv/gateway:0.1.0-dev.43}
 fixture_dir=$(mktemp -d)
 trap 'rm -rf "$fixture_dir"' EXIT
 CGO_ENABLED=0 GOMAXPROCS=2 go -C "$core_dir/gateway" test -p 2 -c -o "$fixture_dir/media.test" ./internal/media

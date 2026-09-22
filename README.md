@@ -56,6 +56,52 @@ as fallback. RTSP defaults to the LAN bind so a paired phone can publish; set
 `ZOMBIE_RTSP_BIND_IP` in the private Compose env file to restrict it separately.
 Relay control/HLS ports stay inside Compose and are not published to the LAN.
 
+### Frozen local Full bundle
+
+For a private evaluation, preserve all service images already built on the maintainer's
+machine, including optional workers and MediaMTX:
+
+```sh
+python3 scripts/local-bundle.py --output /absolute/new/full-bundle
+cd /absolute/new/full-bundle
+bash install.sh --prepare-only
+bash install.sh --profile youtube
+bash control.sh status
+bash control.sh stop
+```
+
+The generator exports a deduplicated `images.tar`, image identities/platforms,
+source-free Compose, configuration helpers and diagnostic assets with SHA256SUMS.
+Installation verifies files and restores missing images from that archive. It neither
+builds nor pulls. Compose uses exact local SHA256 image IDs and `pull_policy: never`;
+these IDs are distinguished from registry manifest digests. All nine services are
+locked, with gateway/discovery sharing an image. Keep the **entire bundle**, including
+the image archive, for reinstalls. Moving a development tag does not affect it.
+
+Each external tool remains in its own service (UxPlay inside `airplay`, go-librespot
+inside `spotify`, Threadfin, MediaMTX and the Node workers). First-party wrappers,
+Dockerfiles and dependency locks are tracked; upstream clones stay ignored local
+build inputs. No upstream source is vendored into this repository.
+
+Local bundles default to project `zombie-full-test` and runtime
+`${XDG_DATA_HOME:-$HOME/.local/share}/zombiebox/full-test`. Their LAN ports overlap an
+existing normal installation; explicitly stop that installation before starting the
+candidate. Existing configuration is not copied. Set `ZOMBIE_COMPOSE_PROJECT` and
+`ZOMBIE_RUNTIME_ROOT` consistently on install/control commands to choose alternatives.
+Use `control.sh down` to remove this project's containers/network without deleting
+persistent state. Logs may contain provider-specific information; review before sharing.
+
+This provides repeatable deployment of the saved Linux architecture, not a promise
+of bit-for-bit source rebuilds, completed physical validation or public redistribution.
+No external registry is required for installation; provider content still needs network
+access. Complete corresponding sources and public GHCR delivery follow separately.
+The author's device test manual is intentionally kept outside this repository.
+
+Registry distribution will use one image per service, pinned as `image@sha256:...`;
+old manifests/layers must remain retained. A digest pins identity but does not ensure
+that a registry retains the content. See [Compose image references](https://docs.docker.com/reference/compose-file/services/#image)
+and [Docker image export](https://docs.docker.com/reference/cli/docker/image/save/).
+
 ### Prebuilt release bundle (first publication pending)
 
 The maintainer runs `scripts/release-bundle.py --images images.json --output DIR`

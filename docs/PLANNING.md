@@ -134,3 +134,14 @@ Dev.42: pin the shared preferred-audio planner. No new binary image or worker di
 ## dev.43 navigation and functional media increment
 
 Dev.43: gateway image includes the shared software pipeline diagnostic. Immutable image inventory reads copied Go binary hashes, linked modules and build identities without execution. Complete OS/worker corresponding sources and GHCR bundle delivery remain open.
+
+## dev.44 — frozen Full evaluation bundle
+
+Author priority: prepare Full for the first physical evaluation before completing
+public corresponding-source distribution and optional Edge modules. Tools remain
+independent Docker services; upstream clones are ignored build inputs. Private
+offline bundles preserve exact local image IDs, all service layers, platform,
+configuration helpers and checksums, with no registry pulls or source builds at
+install time. Public GHCR manifest digests and source compliance remain separate.
+The device test manual lives outside all repositories. Physical execution has not
+yet taken place; no milestone closes.

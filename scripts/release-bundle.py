@@ -2,12 +2,12 @@
 """Prepare a source-free installation bundle from reviewed image digests. No publishing."""
 
 import argparse
-import hashlib
 import json
 import re
-import shutil
 import subprocess
 from pathlib import Path
+
+from lib.bundle_assets import checksums, copy_assets
 
 ROOT = Path(__file__).resolve().parents[1]
 SERVICES = {
@@ -98,45 +98,8 @@ def main():
     }
     (output / "release.json").write_text(json.dumps(provenance, indent=2) + "\n")
     (output / "release.compose.json").write_text(json.dumps(compose, indent=2) + "\n")
-    for filename in ("install.sh", "README.md", "LICENSE", "NOTICE"):
-        shutil.copy2(ROOT / filename, output / filename)
-    shutil.copytree(
-        ROOT / "scripts",
-        output / "scripts",
-        ignore=shutil.ignore_patterns("__pycache__"),
-    )
-    for filename in (
-        "wrappers/mediamtx/mediamtx.yml",
-        "wrappers/rebrowser/seccomp_profile.json",
-    ):
-        target = output / "assets" / filename
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(core / filename, target)
-    subprocess.run(
-        [
-            "python3",
-            str(core / "scripts/generate-probes.py"),
-            "--output",
-            str(output / "assets/probes"),
-        ],
-        check=True,
-    )
-    subprocess.run(
-        [
-            "python3",
-            str(core / "scripts/generate-extended-probes.py"),
-            "--output",
-            str(output / "assets/probes"),
-        ],
-        check=True,
-    )
-    files = sorted(path for path in output.rglob("*") if path.is_file())
-    (output / "SHA256SUMS").write_text(
-        "".join(
-            f"{hashlib.sha256(path.read_bytes()).hexdigest()}  {path.relative_to(output)}\n"
-            for path in files
-        )
-    )
+    copy_assets(ROOT, core, output)
+    checksums(output)
     print(
         f"Prepared {output}; images, signing, publication and physical acceptance are separate gates."
     )

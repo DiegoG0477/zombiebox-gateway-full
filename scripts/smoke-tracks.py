@@ -2,6 +2,7 @@
 """Exercise the packaged gateway with synthetic local media; no real accounts."""
 
 import json
+import os
 import subprocess
 import tempfile
 import time
@@ -9,7 +10,7 @@ import urllib.request
 import uuid
 from pathlib import Path
 
-IMAGE = "zombie-box-tv/gateway:0.1.0-dev.22"
+IMAGE = os.environ.get("ZOMBIE_SMOKE_IMAGE", "zombie-box-tv/gateway:0.1.0-dev.43")
 
 
 def command(*args):
