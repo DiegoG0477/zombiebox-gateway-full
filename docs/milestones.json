@@ -32,7 +32,8 @@
     "Dev.38: existing repository transferred to ZombieBox-tv with preserved identity/history/releases/milestones. No product completion or physical acceptance is implied.",
     "Dev.39: consume the shared core scoped Stremio search continuation. Packaging checks do not claim a new binary release, deployment or physical acceptance.",
     "Dev.40: Consumes the same endpoint-diagnostic core. No image deployment or new runtime validation; complete source/notices and immutable image delivery remain open. No product or physical gate closes.",
-    "Dev.41: Pins the shared capability-aware audio-selection core. No image build, active deployment or new binary publication in this checkpoint. No milestone closes."
+    "Dev.41: Pins the shared capability-aware audio-selection core. No image build, active deployment or new binary publication in this checkpoint. No milestone closes.",
+    "Dev.42: pin the shared preferred-audio planner. No new binary image or worker distribution; complete Full image/source delivery remains open."
   ],
   "milestones": [
     {
@@ -84,6 +85,6 @@
       "remoteURL": "https://github.com/ZombieBox-tv/zombiebox-gateway-full/milestone/6"
     }
   ],
-  "developmentCheckpoint": "v0.1.0-dev.38",
+  "developmentCheckpoint": "v0.1.0-dev.42",
   "remote": "https://github.com/ZombieBox-tv/zombiebox-gateway-full"
 }

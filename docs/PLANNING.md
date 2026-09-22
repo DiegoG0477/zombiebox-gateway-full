@@ -126,3 +126,7 @@ Consumes the same endpoint-diagnostic core. No image deployment or new runtime v
 ## dev.41 guide and audio selection increment
 
 Pins the shared capability-aware audio-selection core. No image build, active deployment or new binary publication in this checkpoint. Product and physical gates remain open.
+
+## dev.42 navigation and preferred-audio increment
+
+Dev.42: pin the shared preferred-audio planner. No new binary image or worker distribution; complete Full image/source delivery remains open.
