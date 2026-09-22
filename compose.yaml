@@ -1,7 +1,7 @@
 name: zombie-box-tv
 services:
   gateway:
-    image: zombie-box-tv/gateway:0.1.0-dev.35
+    image: zombie-box-tv/gateway:0.1.0-dev.37
     build:
       context: ${ZOMBIE_CORE_DIR:-../gateway-core}
       dockerfile: ${ZOMBIE_FULL_DIR:-../gateway-full}/Dockerfile
@@ -48,6 +48,7 @@ services:
     cpus: 2.0
     pids_limit: 96
     read_only: true
+    tmpfs: ["/tmp:size=16777216,mode=1777"]
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
     healthcheck:
@@ -58,7 +59,7 @@ services:
     restart: unless-stopped
 
   discovery:
-    image: zombie-box-tv/gateway:0.1.0-dev.35
+    image: zombie-box-tv/gateway:0.1.0-dev.37
     network_mode: host
     command:
       [
@@ -85,7 +86,7 @@ services:
 
   youtube:
     profiles: [youtube]
-    image: zombie-box-tv/youtube:0.1.0-dev.17
+    image: zombie-box-tv/youtube:0.1.0-dev.37
     build:
       context: ${ZOMBIE_CORE_DIR:-../gateway-core}
       dockerfile: wrappers/youtube/Dockerfile
@@ -114,7 +115,7 @@ services:
 
   youtube-receiver:
     profiles: [youtube-receiver]
-    image: zombie-box-tv/youtube-receiver:0.1.0-dev.35
+    image: zombie-box-tv/youtube-receiver:0.1.0-dev.37
     build:
       context: ${ZOMBIE_CORE_DIR:-../gateway-core}
       dockerfile: wrappers/youtube-receiver/Dockerfile
@@ -132,7 +133,7 @@ services:
 
   spotify:
     profiles: [spotify]
-    image: zombie-box-tv/spotify:0.1.0-dev.17
+    image: zombie-box-tv/spotify:0.1.0-dev.37
     build:
       context: ${ZOMBIE_CORE_DIR:-../gateway-core}
       dockerfile: wrappers/spotify/Dockerfile
@@ -152,7 +153,7 @@ services:
 
   airplay:
     profiles: [airplay]
-    image: zombie-box-tv/airplay:0.1.0-dev.17
+    image: zombie-box-tv/airplay:0.1.0-dev.37
     build:
       context: ${ZOMBIE_CORE_DIR:-../gateway-core}
       dockerfile: wrappers/airplay/Dockerfile
@@ -173,7 +174,7 @@ services:
 
   threadfin:
     profiles: [threadfin]
-    image: zombie-box-tv/threadfin:0.1.0-dev.17
+    image: zombie-box-tv/threadfin:0.1.0-dev.37
     build:
       context: ${ZOMBIE_CORE_DIR:-../gateway-core}
       dockerfile: wrappers/threadfin/Dockerfile
@@ -194,7 +195,7 @@ services:
 
   rebrowser:
     profiles: [rebrowser]
-    image: zombie-box-tv/rebrowser:0.1.0-dev.17
+    image: zombie-box-tv/rebrowser:0.1.0-dev.37
     build:
       context: ${ZOMBIE_CORE_DIR:-../gateway-core}
       dockerfile: wrappers/rebrowser/Dockerfile

@@ -191,3 +191,8 @@ Consumes dev.34 core pairing and remote-text implementation; packaging strategy 
 ## dev.35 increment
 
 Packages the shared dev.35 queue/adaptation/listening core and epoch-aware YouTube receiver. Hosted source and dependency remotes are configured; public images and full binary source inventory remain separate.
+
+
+## dev.37 increment
+
+[Immutable image inventory](docs/image-source-inventory.md) identifies Alpine package/source revisions before distribution. It does not claim complete corresponding sources. The gateway has a bounded writable temporary filesystem for text subtitle conversion; active deployments are not changed by this source checkpoint.

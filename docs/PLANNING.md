@@ -113,3 +113,8 @@ Product exit gates and deferred physical acceptance remain open.
 
 Packages the shared dev.35 queue/adaptation/listening core and epoch-aware YouTube receiver. Hosted source and dependency remotes are configured; public images and full binary source inventory remain separate.
 Product milestone completion still requires its recorded acceptance gates.
+
+
+## dev.37 implementation checkpoint
+
+Runtime image source inventory and DIAL notices; bounded temporary space for external ASS conversion. Complete corresponding-source/image distribution remains open.

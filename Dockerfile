@@ -10,6 +10,7 @@ RUN apk add --no-cache ffmpeg=8.0.1-r1
 COPY --from=build /zombied /zombied
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY LICENSE NOTICE /usr/share/doc/zombiebox/
+COPY docs/licenses/DIAL-LICENSE /usr/share/doc/zombiebox/DIAL-LICENSE
 COPY docs/licenses/go-qrcode-LICENSE /usr/share/doc/zombiebox/go-qrcode-LICENSE
 USER 65532:65532
 EXPOSE 8090
