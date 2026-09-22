@@ -122,7 +122,7 @@ def inventory_go_binary(container, binary, root):
     return result
 
 
-def inspect_image(image, output, go_binaries=()):
+def inspect_image(image, output, go_binaries=(), no_alpine=False):
     if not re.fullmatch(r"(?:[a-z0-9./:_-]+@)?sha256:[a-f0-9]{64}", image):
         raise ValueError("Use an immutable image ID or registry digest")
     inspected = json.loads(
@@ -143,17 +143,19 @@ def inspect_image(image, output, go_binaries=()):
             text=True,
         ).strip()
         try:
-            subprocess.run(
-                [
-                    "docker",
-                    "cp",
-                    container + ":/lib/apk/db/installed",
-                    str(root / "installed"),
-                ],
-                check=True,
-                capture_output=True,
-            )
-            packages = alpine_packages((root / "installed").read_text())
+            packages = []
+            if not no_alpine:
+                subprocess.run(
+                    [
+                        "docker",
+                        "cp",
+                        container + ":/lib/apk/db/installed",
+                        str(root / "installed"),
+                    ],
+                    check=True,
+                    capture_output=True,
+                )
+                packages = alpine_packages((root / "installed").read_text())
             binaries = [
                 inventory_go_binary(container, binary, root)
                 for binary in dict.fromkeys(go_binaries)
@@ -191,9 +193,11 @@ def inspect_image(image, output, go_binaries=()):
             imageId=inspected["Id"],
             architecture=inspected["Architecture"],
             rootfsLayers=inspected["RootFS"]["Layers"],
-            installedDatabaseSha256=hashlib.sha256(
-                (root / "installed").read_bytes()
-            ).hexdigest(),
+            installedDatabaseSha256=(
+                hashlib.sha256((root / "installed").read_bytes()).hexdigest()
+                if not no_alpine
+                else None
+            ),
             osPackages=packages,
             npmPackages=npm,
             goBinaries=binaries,
@@ -202,7 +206,7 @@ def inspect_image(image, output, go_binaries=()):
                 for name, commit in origins
             ],
             coverage={
-                "alpineInstalledDatabase": True,
+                "alpineInstalledDatabase": not no_alpine,
                 "npmRuntimeLockPresent": copied.returncode == 0,
                 "goAndManuallyCopiedBinaries": False,
                 "selectedGoBinariesInspected": len(binaries),
@@ -222,13 +226,16 @@ def main():
     parser.add_argument("--image", required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument(
+        "--no-alpine", action="store_true", help="scratch image with no apk database"
+    )
+    parser.add_argument(
         "--go-binary",
         action="append",
         default=[],
         help="explicit root or /usr/local/bin Go executable to inventory without running it",
     )
     args = parser.parse_args()
-    inspect_image(args.image, args.output, args.go_binary)
+    inspect_image(args.image, args.output, args.go_binary, args.no_alpine)
 
 
 if __name__ == "__main__":
