@@ -3,7 +3,7 @@
   "repository": "zombiebox-gateway-full",
   "productRegistry": "workspace:docs/milestones.json",
   "notes": [
-    "Local component scope; product exit gates remain open. No hosted milestones exist.",
+    "Local component scope; product exit gates remain open. Hosted milestones are open; see remoteURL entries.",
     "Dev.10: shared local media tracks/text subtitles and client Home refinement. Cast consumes the protocol transport update. Product exit gates remain open.",
     "Dev.11: Gateway and YouTube dev.11 image pins, shared remote/browse implementation and synthetic packaged FFmpeg smoke. Running services are not automatically replaced. Product exit gates remain open.",
     "Dev.12: Packages shared reception and Cast budgets. Gateway image dev.12, YouTube dev.11, other worker pins unchanged.",
@@ -25,7 +25,8 @@
     "Dev.30: Pins the shared phone-media core. Source image target advances to dev.30; active services are not replaced and no new image is claimed. Product and physical gates remain open.",
     "Dev.31: Pins the shared native-inventory validation/export core. Source image target is dev.31; active dev.22 services are unchanged and no new image is claimed. Product gates remain open.",
     "Dev.32: Pins the shared legacy phone-file container increment for Full. Source image target is dev.32; active services are not replaced. Candidate build evidence is recorded in the workspace checkpoint. Product gates remain open.",
-    "Dev.34: Consumes dev.34 core pairing and remote-text implementation; packaging strategy is unchanged. Public image digests, complete redistribution inventory and deployment remain separate gates."
+    "Dev.34: Consumes dev.34 core pairing and remote-text implementation; packaging strategy is unchanged. Public image digests, complete redistribution inventory and deployment remain separate gates.",
+    "Dev.35: Packages the shared dev.35 queue/adaptation/listening core and epoch-aware YouTube receiver. Hosted source and dependency remotes are configured; public images and full binary source inventory remain separate."
   ],
   "milestones": [
     {
@@ -33,43 +34,50 @@
       "title": "Bootstrap / ADRs",
       "status": "in_progress",
       "completedAt": null,
-      "remoteId": null
+      "remoteId": 1,
+      "remoteURL": "https://github.com/DiegoG0477/zombiebox-gateway-full/milestone/1"
     },
     {
       "id": "M6",
       "title": "Spotify + AirPlay",
       "status": "in_progress",
       "completedAt": null,
-      "remoteId": null
+      "remoteId": 2,
+      "remoteURL": "https://github.com/DiegoG0477/zombiebox-gateway-full/milestone/2"
     },
     {
       "id": "M7",
       "title": "Android Mirror",
       "status": "in_progress",
       "completedAt": null,
-      "remoteId": null
+      "remoteId": 3,
+      "remoteURL": "https://github.com/DiegoG0477/zombiebox-gateway-full/milestone/3"
     },
     {
       "id": "M8",
       "title": "IPTV",
       "status": "in_progress",
       "completedAt": null,
-      "remoteId": null
+      "remoteId": 4,
+      "remoteURL": "https://github.com/DiegoG0477/zombiebox-gateway-full/milestone/4"
     },
     {
       "id": "M9",
       "title": "Rebrowser",
       "status": "in_progress",
       "completedAt": null,
-      "remoteId": null
+      "remoteId": 5,
+      "remoteURL": "https://github.com/DiegoG0477/zombiebox-gateway-full/milestone/5"
     },
     {
       "id": "M11",
       "title": "Public beta",
       "status": "planned",
       "completedAt": null,
-      "remoteId": null
+      "remoteId": 6,
+      "remoteURL": "https://github.com/DiegoG0477/zombiebox-gateway-full/milestone/6"
     }
   ],
-  "developmentCheckpoint": "v0.1.0-dev.34"
+  "developmentCheckpoint": "v0.1.0-dev.35",
+  "remote": "https://github.com/DiegoG0477/zombiebox-gateway-full"
 }

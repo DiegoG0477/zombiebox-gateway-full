@@ -2,8 +2,9 @@
 
 Linux/Fedora Compose packaging and private runtime configuration.
 
-This is an independent repository in the Zombie Box workspace. Remotes and hosted
-releases are not configured yet; local commits/tags and dependency pins are real.
+This is an independent repository in the Zombie Box workspace.
+[Source and milestones](https://github.com/DiegoG0477/zombiebox-gateway-full) are hosted on GitHub.
+Development checkpoints are not stable releases or physical compatibility claims.
 
 Depends on the exact gateway-core commit in `dependencies.lock.json`.
 
@@ -14,9 +15,12 @@ Depends on the exact gateway-core commit in `dependencies.lock.json`.
 Requirements: Linux, Docker Engine with Compose v2, Python3, Git and FFmpeg with
 libx264/libx265 for synthetic diagnostics. Source dependencies use the exact core
 pin. In the existing workspace the sibling checkout is found automatically;
-standalone cloning needs a real core remote configured in `dependencies.lock.json`.
+standalone cloning restores the pinned public core using `make deps`.
 
 ```sh
+git clone https://github.com/DiegoG0477/zombiebox-gateway-full.git
+cd zombiebox-gateway-full
+make deps
 bash install.sh
 ```
 
@@ -183,3 +187,7 @@ Product milestones, physical validation and public distribution remain open.
 ## dev.34 increment
 
 Consumes dev.34 core pairing and remote-text implementation; packaging strategy is unchanged. Public image digests, complete redistribution inventory and deployment remain separate gates.
+
+## dev.35 increment
+
+Packages the shared dev.35 queue/adaptation/listening core and epoch-aware YouTube receiver. Hosted source and dependency remotes are configured; public images and full binary source inventory remain separate.
