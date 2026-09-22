@@ -3,7 +3,7 @@
 Linux/Fedora Compose packaging and private runtime configuration.
 
 This is an independent repository in the Zombie Box workspace.
-[Source and milestones](https://github.com/DiegoG0477/zombiebox-gateway-full) are hosted on GitHub.
+[Source and milestones](https://github.com/ZombieBox-tv/zombiebox-gateway-full) are hosted on GitHub.
 Development checkpoints are not stable releases or physical compatibility claims.
 
 Depends on the exact gateway-core commit in `dependencies.lock.json`.
@@ -18,7 +18,7 @@ pin. In the existing workspace the sibling checkout is found automatically;
 standalone cloning restores the pinned public core using `make deps`.
 
 ```sh
-git clone https://github.com/DiegoG0477/zombiebox-gateway-full.git
+git clone https://github.com/ZombieBox-tv/zombiebox-gateway-full.git
 cd zombiebox-gateway-full
 make deps
 bash install.sh

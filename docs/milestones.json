@@ -28,7 +28,8 @@
     "Dev.34: Consumes dev.34 core pairing and remote-text implementation; packaging strategy is unchanged. Public image digests, complete redistribution inventory and deployment remain separate gates.",
     "Dev.35: Packages the shared dev.35 queue/adaptation/listening core and epoch-aware YouTube receiver. Hosted source and dependency remotes are configured; public images and full binary source inventory remain separate.",
     "Dev.36: consume the DIAL-notice core pin. Full worker image/source publication remains separate from APK and Edge core releases.",
-    "Dev.37: Runtime image source inventory and DIAL notices; bounded temporary space for external ASS conversion. Complete corresponding-source/image distribution remains open."
+    "Dev.37: Runtime image source inventory and DIAL notices; bounded temporary space for external ASS conversion. Complete corresponding-source/image distribution remains open.",
+    "Dev.38: existing repository transferred to ZombieBox-tv with preserved identity/history/releases/milestones. No product completion or physical acceptance is implied."
   ],
   "milestones": [
     {
@@ -37,7 +38,7 @@
       "status": "in_progress",
       "completedAt": null,
       "remoteId": 1,
-      "remoteURL": "https://github.com/DiegoG0477/zombiebox-gateway-full/milestone/1"
+      "remoteURL": "https://github.com/ZombieBox-tv/zombiebox-gateway-full/milestone/1"
     },
     {
       "id": "M6",
@@ -45,7 +46,7 @@
       "status": "in_progress",
       "completedAt": null,
       "remoteId": 2,
-      "remoteURL": "https://github.com/DiegoG0477/zombiebox-gateway-full/milestone/2"
+      "remoteURL": "https://github.com/ZombieBox-tv/zombiebox-gateway-full/milestone/2"
     },
     {
       "id": "M7",
@@ -53,7 +54,7 @@
       "status": "in_progress",
       "completedAt": null,
       "remoteId": 3,
-      "remoteURL": "https://github.com/DiegoG0477/zombiebox-gateway-full/milestone/3"
+      "remoteURL": "https://github.com/ZombieBox-tv/zombiebox-gateway-full/milestone/3"
     },
     {
       "id": "M8",
@@ -61,7 +62,7 @@
       "status": "in_progress",
       "completedAt": null,
       "remoteId": 4,
-      "remoteURL": "https://github.com/DiegoG0477/zombiebox-gateway-full/milestone/4"
+      "remoteURL": "https://github.com/ZombieBox-tv/zombiebox-gateway-full/milestone/4"
     },
     {
       "id": "M9",
@@ -69,7 +70,7 @@
       "status": "in_progress",
       "completedAt": null,
       "remoteId": 5,
-      "remoteURL": "https://github.com/DiegoG0477/zombiebox-gateway-full/milestone/5"
+      "remoteURL": "https://github.com/ZombieBox-tv/zombiebox-gateway-full/milestone/5"
     },
     {
       "id": "M11",
@@ -77,9 +78,9 @@
       "status": "planned",
       "completedAt": null,
       "remoteId": 6,
-      "remoteURL": "https://github.com/DiegoG0477/zombiebox-gateway-full/milestone/6"
+      "remoteURL": "https://github.com/ZombieBox-tv/zombiebox-gateway-full/milestone/6"
     }
   ],
-  "developmentCheckpoint": "v0.1.0-dev.37",
-  "remote": "https://github.com/DiegoG0477/zombiebox-gateway-full"
+  "developmentCheckpoint": "v0.1.0-dev.38",
+  "remote": "https://github.com/ZombieBox-tv/zombiebox-gateway-full"
 }
