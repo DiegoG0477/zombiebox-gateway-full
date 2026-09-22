@@ -155,3 +155,7 @@ Full visual/capture policy, extended Remote, HEVC/4K and other product gates rem
 ## dev.25 increment
 
 One-command source/release installation, preserved private runtime, digest-only source-free bundle preparation and extended fixtures. Real hosted image digests/publication remain pending.
+
+## dev.27 increment
+
+Pins the shared evidence-gated 1080p Cast negotiation core. The Compose build target is dev.27; no new image was built or deployed in this checkpoint, preserving the reclaimed disk space. Active services remain unchanged. Physical and distribution gates remain open.

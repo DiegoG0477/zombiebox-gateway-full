@@ -19,7 +19,8 @@
     "Dev.22: Packages the shared dev.22 receiver-coordination core; optional workers retain their version pins. Product and physical exit gates remain open.",
     "Dev.23: Trusted-LAN HTTP default and constrained host-network discovery sidecar; make up prepares/builds exact core. Product and physical gates remain open.",
     "Dev.24: Packages the shared companion core in dev.24 and includes the QR encoder license. Existing running services are not automatically replaced. Product and physical gates remain open.",
-    "Dev.25: One-command source/release installation, preserved private runtime, digest-only source-free bundle preparation and extended fixtures. Real hosted image digests/publication remain pending."
+    "Dev.25: One-command source/release installation, preserved private runtime, digest-only source-free bundle preparation and extended fixtures. Real hosted image digests/publication remain pending.",
+    "Dev.27: Pins the shared evidence-gated 1080p Cast negotiation core. The Compose build target is dev.27; no new image was built or deployed in this checkpoint, preserving the reclaimed disk space. Active services remain unchanged. Physical and distribution gates remain open."
   ],
   "milestones": [
     {
@@ -65,5 +66,5 @@
       "remoteId": null
     }
   ],
-  "developmentCheckpoint": "v0.1.0-dev.24"
+  "developmentCheckpoint": "v0.1.0-dev.27"
 }
