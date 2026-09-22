@@ -43,7 +43,86 @@ def alpine_packages(text):
     return sorted(packages, key=lambda package: package["name"])
 
 
-def inspect_image(image, output):
+def go_build_info(text):
+    """Parse embedded build metadata; the inspected executable is never run."""
+    lines = text.splitlines()
+    if not lines or not re.search(r": go[0-9]+\.[0-9]+", lines[0]):
+        raise ValueError("Missing Go build metadata")
+    result = {
+        "goVersion": lines[0].rsplit(": ", 1)[-1],
+        "dependencies": [],
+        "build": {},
+    }
+    allowed = {
+        "GOOS",
+        "GOARCH",
+        "GOARM",
+        "CGO_ENABLED",
+        "vcs.revision",
+        "vcs.modified",
+        "-buildmode",
+        "-compiler",
+    }
+    for line in lines[1:]:
+        fields = line.strip().split("\t")
+        if fields[0] == "path" and len(fields) == 2:
+            result["package"] = fields[1]
+        elif fields[0] in {"mod", "dep"} and len(fields) in {3, 4}:
+            module = {
+                "path": fields[1],
+                "version": fields[2],
+                "goSum": fields[3] if len(fields) == 4 else "",
+                "sourceCollected": False,
+            }
+            if fields[0] == "mod":
+                result["mainModule"] = module
+            else:
+                result["dependencies"].append(module)
+        elif fields[0] == "=>":
+            # A replacement changes corresponding-source identity. Do not silently
+            # attest the original module or follow an arbitrary local build path.
+            raise ValueError("Go module replacement requires an explicit source review")
+        elif fields[0] == "build" and len(fields) == 2:
+            key, separator, value = fields[1].partition("=")
+            if separator and key in allowed:
+                result["build"][key] = value
+    if (
+        "package" not in result
+        or "mainModule" not in result
+        or len(result["dependencies"]) > 4096
+    ):
+        raise ValueError("Incomplete Go build inventory")
+    return result
+
+
+def inventory_go_binary(container, binary, root):
+    if not re.fullmatch(r"/(?:usr/local/bin/)?[a-zA-Z0-9_-]+", binary):
+        raise ValueError("Select a root or /usr/local/bin executable path")
+    target = root / "go-binary"
+    subprocess.run(
+        ["docker", "cp", container + ":" + binary, str(target)],
+        check=True,
+        capture_output=True,
+    )
+    if (
+        target.is_symlink()
+        or not target.is_file()
+        or target.stat().st_size > 512 * 1024 * 1024
+    ):
+        raise ValueError("Expected a bounded regular Go executable")
+    metadata = subprocess.check_output(
+        ["go", "version", "-m", str(target)], text=True, timeout=10
+    )
+    result = go_build_info(metadata)
+    with target.open("rb") as source:
+        result["sha256"] = hashlib.file_digest(source, "sha256").hexdigest()
+    result["imagePath"] = binary
+    result["bytes"] = target.stat().st_size
+    target.unlink()
+    return result
+
+
+def inspect_image(image, output, go_binaries=()):
     if not re.fullmatch(r"(?:[a-z0-9./:_-]+@)?sha256:[a-f0-9]{64}", image):
         raise ValueError("Use an immutable image ID or registry digest")
     inspected = json.loads(
@@ -75,6 +154,10 @@ def inspect_image(image, output):
                 capture_output=True,
             )
             packages = alpine_packages((root / "installed").read_text())
+            binaries = [
+                inventory_go_binary(container, binary, root)
+                for binary in dict.fromkeys(go_binaries)
+            ]
             npm = []
             copied = subprocess.run(
                 [
@@ -113,6 +196,7 @@ def inspect_image(image, output):
             ).hexdigest(),
             osPackages=packages,
             npmPackages=npm,
+            goBinaries=binaries,
             requiredSources=[
                 dict(origin=name, aportsCommit=commit, sourceCollected=False)
                 for name, commit in origins
@@ -121,6 +205,7 @@ def inspect_image(image, output):
                 "alpineInstalledDatabase": True,
                 "npmRuntimeLockPresent": copied.returncode == 0,
                 "goAndManuallyCopiedBinaries": False,
+                "selectedGoBinariesInspected": len(binaries),
                 "completeCorrespondingSources": False,
             },
             publicationReady=False,
@@ -136,8 +221,14 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--image", required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--go-binary",
+        action="append",
+        default=[],
+        help="explicit root or /usr/local/bin Go executable to inventory without running it",
+    )
     args = parser.parse_args()
-    inspect_image(args.image, args.output)
+    inspect_image(args.image, args.output, args.go_binary)
 
 
 if __name__ == "__main__":

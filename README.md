@@ -208,3 +208,12 @@ Consumes the same endpoint-diagnostic core. No image deployment or new runtime v
 Pins the shared capability-aware audio-selection core. No image build, active deployment or new binary publication in this checkpoint. Product and physical gates remain open.
 
 Dev.42: pin the shared preferred-audio planner. No new binary image or worker distribution; complete Full image/source delivery remains open.
+
+## dev.43 navigation and functional media increment
+
+Dev.43: gateway image includes the shared software pipeline diagnostic. Immutable image inventory reads copied Go binary hashes, linked modules and build identities without execution. Complete OS/worker corresponding sources and GHCR bundle delivery remain open.
+
+The new source-built gateway can run `-diagnose-media` in an isolated container to
+check its local FFmpeg pipeline. This is opt-in and does not connect to any provider
+or certify a TV decoder. See the core's `docs/media-diagnostic.md`. Existing running
+containers are not upgraded by building a new image.

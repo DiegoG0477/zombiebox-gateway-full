@@ -130,3 +130,7 @@ Pins the shared capability-aware audio-selection core. No image build, active de
 ## dev.42 navigation and preferred-audio increment
 
 Dev.42: pin the shared preferred-audio planner. No new binary image or worker distribution; complete Full image/source delivery remains open.
+
+## dev.43 navigation and functional media increment
+
+Dev.43: gateway image includes the shared software pipeline diagnostic. Immutable image inventory reads copied Go binary hashes, linked modules and build identities without execution. Complete OS/worker corresponding sources and GHCR bundle delivery remain open.
