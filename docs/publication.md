@@ -29,10 +29,15 @@ upstreams, but a previously published release never follows a moving tag.
    collected Go/npm/aports identities, checks every Alpine source SHA512 again,
    and produces bounded source assets plus `sources-index.json`. An incomplete
    image, unavailable source or missing verified receipt fails closed.
-5. `scripts/push-ghcr.py` refuses to push without the matching complete source
-   index. It tags all nine images under this release version, refuses existing
-   tags and records the actual pushed manifest digests in a resumable receipt.
-   Push the corresponding Full source commit and annotated tag too.
+5. Push the corresponding Full source commit and annotated tag, then create a
+   **public prerelease** with the source index/parts, an exact `images.tar` and
+   `images.sha256`. The manual `.github/workflows/publish-ghcr.yml` verifies
+   those public source assets against GitHub's SHA256 asset digests, loads the
+   archive and invokes `scripts/push-ghcr.py` with the repository's scoped
+   `GITHUB_TOKEN`. The script tags all nine images under this release version,
+   refuses existing tags and records pushed manifest digests in a resumable
+   receipt attached to the prerelease. This avoids requiring a personal
+   `write:packages` token on the maintainer machine.
 6. Set each new GHCR package's visibility to **public** in the organization
    package settings, then run `scripts/finalize-public-bundle.py`. It checks every
    digest with **anonymous** registry access before setting `publicationReady`.

@@ -3,6 +3,7 @@
 
 import argparse
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -31,8 +32,9 @@ def publish(index, version, namespace, receipt_path=None):
     token = subprocess.check_output(["gh", "auth", "token"], text=True).strip()
     if not token:
         raise ValueError("GitHub authentication is required")
+    username = os.environ.get("GITHUB_ACTOR", "DiegoG0477")
     login = subprocess.run(
-        ["docker", "login", "ghcr.io", "-u", "DiegoG0477", "--password-stdin"],
+        ["docker", "login", "ghcr.io", "-u", username, "--password-stdin"],
         input=token,
         text=True,
         capture_output=True,

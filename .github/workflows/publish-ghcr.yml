@@ -1,0 +1,66 @@
+name: Publish frozen Full images
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Existing source-complete prerelease tag
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    concurrency:
+      group: full-ghcr-${{ inputs.version }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ inputs.version }}
+          persist-credentials: false
+      - name: Download frozen images and source index
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_REPOSITORY: ${{ github.repository }}
+        run: |
+          mkdir -p dist/publication
+          gh release download "$RELEASE_VERSION" -R "$RELEASE_REPOSITORY" \
+            --pattern images.tar --pattern images.sha256 \
+            --pattern sources-index.json --dir dist/publication
+      - name: Verify public source assets and exact image archive
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_REPOSITORY: ${{ github.repository }}
+        run: |
+          cd dist/publication
+          sha256sum --check images.sha256
+          cd ../..
+          python3 scripts/verify-release-assets.py \
+            --repository "$RELEASE_REPOSITORY" \
+            --version "$RELEASE_VERSION" \
+            --sources-index dist/publication/sources-index.json \
+            --images-checksum dist/publication/images.sha256
+      - name: Load, push and record distinct service images
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ inputs.version }}
+        run: |
+          docker image load -i dist/publication/images.tar
+          python3 scripts/push-ghcr.py \
+            --sources-index dist/publication/sources-index.json \
+            --version "$RELEASE_VERSION" \
+            --output dist/publication/push-receipt.json
+      - name: Attach manifest-digest receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_REPOSITORY: ${{ github.repository }}
+        run: |
+          gh release upload "$RELEASE_VERSION" \
+            dist/publication/push-receipt.json -R "$RELEASE_REPOSITORY"
