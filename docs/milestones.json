@@ -35,7 +35,8 @@
     "Dev.41: Pins the shared capability-aware audio-selection core. No image build, active deployment or new binary publication in this checkpoint. No milestone closes.",
     "Dev.42: pin the shared preferred-audio planner. No new binary image or worker distribution; complete Full image/source delivery remains open.",
     "Dev.43: gateway image includes the shared software pipeline diagnostic. Immutable image inventory reads copied Go binary hashes, linked modules and build identities without execution. Complete OS/worker corresponding sources and GHCR bundle delivery remain open.",
-    "Dev.44: frozen local Full image archive and compiler-free offline installation; separate candidate runtime/project and control commands. Author now prioritizes first Full physical evaluation; manual stays outside Git. Public distribution, Edge modules and product acceptance remain open."
+    "Dev.44: frozen local Full image archive and compiler-free offline installation; separate candidate runtime/project and control commands. Author now prioritizes first Full physical evaluation; manual stays outside Git. Public distribution, Edge modules and product acceptance remain open.",
+    "Dev.45: Docker-only Full Compose initialization in a network-disabled container; persistent per-service named volumes, preserved secrets and no host toolchain. Every generated bundle requires an explicit release version and frozen service identities. Public images/sources and physical acceptance remain open."
   ],
   "milestones": [
     {
@@ -87,6 +88,6 @@
       "remoteURL": "https://github.com/ZombieBox-tv/zombiebox-gateway-full/milestone/6"
     }
   ],
-  "developmentCheckpoint": "v0.1.0-dev.44",
+  "developmentCheckpoint": "v0.1.0-dev.45",
   "remote": "https://github.com/ZombieBox-tv/zombiebox-gateway-full"
 }

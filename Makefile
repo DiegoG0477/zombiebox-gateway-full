@@ -24,7 +24,7 @@ setup:
 sources: setup
 	python3 scripts/setup-services.py --sources
 check: setup
-	bash -n install.sh control.sh
+	bash -n install.sh control.sh bootstrap/launch-gateway.sh scripts/build-bootstrap.sh
 	python3 -m unittest discover -s tests
 	$(COMPOSE) --profile youtube --profile youtube-receiver --profile spotify --profile airplay --profile threadfin --profile rebrowser config --quiet
 build: setup
@@ -43,3 +43,7 @@ tracks-smoke:
 .PHONY: remote-smoke
 remote-smoke:
 	bash scripts/smoke-remote.sh
+
+.PHONY: bootstrap-image
+bootstrap-image:
+	bash scripts/build-bootstrap.sh

@@ -1,0 +1,6 @@
+*
+!bootstrap/
+!bootstrap/**
+!Dockerfile.bootstrap
+!LICENSE
+!NOTICE

@@ -10,7 +10,63 @@ Depends on the exact gateway-core commit in `dependencies.lock.json`.
 
 ## Installation
 
-### Available now: local/source checkout
+### Default product installation: Docker and Compose only
+
+Full release packages contain a `compose.yaml` that runs a one-shot initialization
+container before the gateway/workers. It creates private configuration and named
+volumes, preserves existing credentials, and supplies diagnostic fixtures. No host
+Go, Python, Node, FFmpeg or upstream checkout is needed. Heavy services remain optional
+Compose profiles; their account readiness is independent of process startup.
+
+Keep the downloaded bundle together: it includes the static `seccomp.json` used
+by the optional sandboxed browser. No host script is needed to generate it.
+
+The public release contract is:
+
+```sh
+# From the downloaded version's Compose bundle, once public images exist:
+docker compose pull
+docker compose up -d
+```
+
+**Public GHCR distribution is still pending.** For the prepared private offline
+candidate, use only Docker:
+
+```sh
+docker image load -i images.tar
+docker compose up -d
+docker compose ps --all
+docker compose logs gateway  # local operator pairing code; keep it private
+```
+
+Default services are gateway, discovery, MediaMTX and YouTube, plus the completed
+initializer. Optional receivers/browser can be added with:
+
+```sh
+docker compose --profile spotify --profile airplay --profile youtube-receiver --profile rebrowser up -d
+```
+
+Threadfin is optional; direct IPTV M3U works without it. Configure IPTV/Plex/Jellyfin/
+Stremio in Client Settings. Existing worker configuration is preserved in named
+volumes. `docker compose down` retains state; `down -v` deletes it. Stop overlapping
+older installations before starting this one on the same LAN ports. Physical device
+acceptance and real-account verification remain separate.
+
+Maintainers build the initializer with `make bootstrap-image`, then generate a new
+bundle using `scripts/compose-bundle.py --version vX.Y.Z --bootstrap-image IMAGE
+--output NEW_DIRECTORY`. Without `--images`, it exports frozen local images; with
+`--images reviewed-images.json`, every service (including initializer and relay)
+must use an explicit registry digest. These Python/build commands are maintainer
+operations, not installation steps. Output directories are never overwritten.
+
+Each release freezes its own dependency set. Review the current stable upstream
+versions when preparing a new functional release, verify compatibility, then pin
+exact versions/commits and digests. Existing releases never follow `latest`; retain
+their images and corresponding sources. Libraries stay libraries; standalone tools
+remain services. See [release policy](docs/release-policy.md).
+
+### Optional manual/source installation (maintainers and developers)
+
 
 Requirements: Linux, Docker Engine with Compose v2, Python3, Git and FFmpeg with
 libx264/libx265 for synthetic diagnostics. Source dependencies use the exact core
@@ -56,7 +112,7 @@ as fallback. RTSP defaults to the LAN bind so a paired phone can publish; set
 `ZOMBIE_RTSP_BIND_IP` in the private Compose env file to restrict it separately.
 Relay control/HLS ports stay inside Compose and are not published to the LAN.
 
-### Frozen local Full bundle
+### Legacy script-driven local bundle (optional manual path)
 
 For a private evaluation, preserve all service images already built on the maintainer's
 machine, including optional workers and MediaMTX:
@@ -102,7 +158,7 @@ old manifests/layers must remain retained. A digest pins identity but does not e
 that a registry retains the content. See [Compose image references](https://docs.docker.com/reference/compose-file/services/#image)
 and [Docker image export](https://docs.docker.com/reference/cli/docker/image/save/).
 
-### Prebuilt release bundle (first publication pending)
+### Legacy script-driven release builder (optional manual path)
 
 The maintainer runs `scripts/release-bundle.py --images images.json --output DIR`
 with actual reviewed `ghcr.io/...@sha256:...` references for every first-party

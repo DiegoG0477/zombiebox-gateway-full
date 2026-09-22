@@ -145,3 +145,13 @@ configuration helpers and checksums, with no registry pulls or source builds at
 install time. Public GHCR manifest digests and source compliance remain separate.
 The device test manual lives outside all repositories. Physical execution has not
 yet taken place; no milestone closes.
+
+## dev.45 — Docker-only installation and per-release dependency sets
+
+Full end users require only Docker Engine and Compose. Initialization runs in its
+own container with no network, preserves private configuration in named volumes
+and provides packaged probes before gateway/workers start. New bundles require an
+explicit ZombieBox version and freeze all service identities, including initializer
+and MediaMTX. Functional releases review current stable upstream versions and pin
+the compatible set; old release locks/images are retained. Go/Python source/build
+tools remain maintainer-only. Public GHCR/source closure and physical gates stay open.
