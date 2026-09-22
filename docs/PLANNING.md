@@ -122,3 +122,7 @@ Runtime image source inventory and DIAL notices; bounded temporary space for ext
 ## dev.40 reception and diagnostics increment
 
 Consumes the same endpoint-diagnostic core. No image deployment or new runtime validation; complete source/notices and immutable image delivery remain open. Product milestones remain open.
+
+## dev.41 guide and audio selection increment
+
+Pins the shared capability-aware audio-selection core. No image build, active deployment or new binary publication in this checkpoint. Product and physical gates remain open.

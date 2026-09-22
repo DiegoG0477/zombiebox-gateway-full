@@ -202,3 +202,7 @@ Packages the shared dev.35 queue/adaptation/listening core and epoch-aware YouTu
 Consumes the same endpoint-diagnostic core. No image deployment or new runtime validation; complete source/notices and immutable image delivery remain open. Product milestones remain open.
 
 [Shared endpoint diagnostic contract](https://github.com/ZombieBox-tv/zombiebox-gateway-core/blob/v0.1.0-dev.40/docs/endpoint-diagnostics.md).
+
+## dev.41 guide and audio selection increment
+
+Pins the shared capability-aware audio-selection core. No image build, active deployment or new binary publication in this checkpoint. Product and physical gates remain open.
