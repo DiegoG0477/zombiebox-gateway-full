@@ -93,3 +93,8 @@ Product milestones and physical acceptance remain open.
 
 Pins the shared phone-media core. Source image target advances to dev.30; active services are not replaced and no new image is claimed.
 Product milestones and deferred physical gates remain open.
+
+## dev.31 increment
+
+Pins the shared native-inventory validation/export core. Source image target is dev.31; active dev.22 services are unchanged and no new image is claimed.
+Product milestone and physical/public distribution gates remain open.
