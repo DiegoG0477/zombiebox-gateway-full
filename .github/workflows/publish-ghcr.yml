@@ -20,7 +20,6 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: ${{ inputs.version }}
           persist-credentials: false
       - name: Download frozen images and source index
         env:
@@ -54,6 +53,7 @@ jobs:
           docker image load -i dist/publication/images.tar
           python3 scripts/push-ghcr.py \
             --sources-index dist/publication/sources-index.json \
+            --archive dist/publication/images.tar \
             --version "$RELEASE_VERSION" \
             --output dist/publication/push-receipt.json
       - name: Attach manifest-digest receipt
