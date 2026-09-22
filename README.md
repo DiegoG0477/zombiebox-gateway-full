@@ -196,3 +196,9 @@ Packages the shared dev.35 queue/adaptation/listening core and epoch-aware YouTu
 ## dev.37 increment
 
 [Immutable image inventory](docs/image-source-inventory.md) identifies Alpine package/source revisions before distribution. It does not claim complete corresponding sources. The gateway has a bounded writable temporary filesystem for text subtitle conversion; active deployments are not changed by this source checkpoint.
+
+## dev.40 reception and diagnostics increment
+
+Consumes the same endpoint-diagnostic core. No image deployment or new runtime validation; complete source/notices and immutable image delivery remain open. Product milestones remain open.
+
+[Shared endpoint diagnostic contract](https://github.com/ZombieBox-tv/zombiebox-gateway-core/blob/v0.1.0-dev.40/docs/endpoint-diagnostics.md).

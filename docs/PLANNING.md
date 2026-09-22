@@ -118,3 +118,7 @@ Product milestone completion still requires its recorded acceptance gates.
 ## dev.37 implementation checkpoint
 
 Runtime image source inventory and DIAL notices; bounded temporary space for external ASS conversion. Complete corresponding-source/image distribution remains open.
+
+## dev.40 reception and diagnostics increment
+
+Consumes the same endpoint-diagnostic core. No image deployment or new runtime validation; complete source/notices and immutable image delivery remain open. Product milestones remain open.

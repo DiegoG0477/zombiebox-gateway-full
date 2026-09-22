@@ -30,7 +30,8 @@
     "Dev.36: consume the DIAL-notice core pin. Full worker image/source publication remains separate from APK and Edge core releases.",
     "Dev.37: Runtime image source inventory and DIAL notices; bounded temporary space for external ASS conversion. Complete corresponding-source/image distribution remains open.",
     "Dev.38: existing repository transferred to ZombieBox-tv with preserved identity/history/releases/milestones. No product completion or physical acceptance is implied.",
-    "Dev.39: consume the shared core scoped Stremio search continuation. Packaging checks do not claim a new binary release, deployment or physical acceptance."
+    "Dev.39: consume the shared core scoped Stremio search continuation. Packaging checks do not claim a new binary release, deployment or physical acceptance.",
+    "Dev.40: Consumes the same endpoint-diagnostic core. No image deployment or new runtime validation; complete source/notices and immutable image delivery remain open. No product or physical gate closes."
   ],
   "milestones": [
     {
