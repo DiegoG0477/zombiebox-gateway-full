@@ -88,3 +88,8 @@ Pins the shared evidence-gated 1080p Cast negotiation core. The Compose build ta
 
 Pins the shared audio-only Cast core. Source image target advances to dev.29; no image rebuild or active-service replacement is claimed.
 Product milestones and physical acceptance remain open.
+
+## dev.30 increment
+
+Pins the shared phone-media core. Source image target advances to dev.30; active services are not replaced and no new image is claimed.
+Product milestones and deferred physical gates remain open.
