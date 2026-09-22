@@ -24,7 +24,8 @@
     "Dev.29: Pins the shared audio-only Cast core. Source image target advances to dev.29; no image rebuild or active-service replacement is claimed. Product and physical gates remain open.",
     "Dev.30: Pins the shared phone-media core. Source image target advances to dev.30; active services are not replaced and no new image is claimed. Product and physical gates remain open.",
     "Dev.31: Pins the shared native-inventory validation/export core. Source image target is dev.31; active dev.22 services are unchanged and no new image is claimed. Product gates remain open.",
-    "Dev.32: Pins the shared legacy phone-file container increment for Full. Source image target is dev.32; active services are not replaced. Candidate build evidence is recorded in the workspace checkpoint. Product gates remain open."
+    "Dev.32: Pins the shared legacy phone-file container increment for Full. Source image target is dev.32; active services are not replaced. Candidate build evidence is recorded in the workspace checkpoint. Product gates remain open.",
+    "Dev.34: Consumes dev.34 core pairing and remote-text implementation; packaging strategy is unchanged. Public image digests, complete redistribution inventory and deployment remain separate gates."
   ],
   "milestones": [
     {
@@ -70,5 +71,5 @@
       "remoteId": null
     }
   ],
-  "developmentCheckpoint": "v0.1.0-dev.32"
+  "developmentCheckpoint": "v0.1.0-dev.34"
 }

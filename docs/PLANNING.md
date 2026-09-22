@@ -103,3 +103,8 @@ Product milestone and physical/public distribution gates remain open.
 
 Pins the shared legacy phone-file container increment for Full. Source image target is dev.32; active services are not replaced. Candidate build evidence is recorded in the workspace checkpoint.
 Product milestones, physical validation and public distribution remain open.
+
+## dev.34 implementation checkpoint
+
+Consumes dev.34 core pairing and remote-text implementation; packaging strategy is unchanged. Public image digests, complete redistribution inventory and deployment remain separate gates.
+Product exit gates and deferred physical acceptance remain open.
