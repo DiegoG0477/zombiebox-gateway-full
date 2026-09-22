@@ -8,6 +8,7 @@ import subprocess
 from pathlib import Path
 
 from lib.bundle_assets import checksums, copy_assets
+from lib.compose_bundle import portable_networks
 
 ROOT = Path(__file__).resolve().parents[1]
 SERVICES = {
@@ -32,6 +33,7 @@ def release_compose(compose, images):
             raise ValueError("Release images must use reviewed GHCR sha256 digests")
     if images["gateway"] != images["discovery"]:
         raise ValueError("Gateway and discovery must use the same image")
+    portable_networks(compose)
     for name, service in compose["services"].items():
         service.pop("build", None)
         if name in images:

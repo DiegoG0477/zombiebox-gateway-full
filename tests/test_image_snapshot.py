@@ -53,6 +53,16 @@ class SnapshotTests(unittest.TestCase):
             self.assertFalse(service["volumes"][0]["bind"]["create_host_path"])
         self.assertEqual(validate({"images": images}, lambda _: self.metadata), [])
 
+    def test_generated_network_names_do_not_attach_to_the_previous_installation(self):
+        self.compose["name"] = "zombie-box-tv"
+        self.compose["networks"] = {
+            "default": {"name": "zombie-box-tv_default"},
+            "explicit": {"name": "operator-network", "external": True},
+        }
+        frozen, _ = freeze(self.compose, lambda _: self.metadata)
+        self.assertNotIn("name", frozen["networks"]["default"])
+        self.assertEqual(frozen["networks"]["explicit"]["name"], "operator-network")
+
     def test_missing_images_require_restore_and_changed_platform_is_rejected(self):
         _, images = freeze(self.compose, lambda _: self.metadata)
 

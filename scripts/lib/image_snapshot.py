@@ -5,6 +5,8 @@ import json
 import re
 import subprocess
 
+from lib.compose_bundle import portable_networks
+
 
 def inspect(reference):
     return json.loads(
@@ -14,6 +16,7 @@ def inspect(reference):
 
 def freeze(compose, inspector=inspect):
     result = copy.deepcopy(compose)
+    portable_networks(result)
     images = {}
     for name, service in result["services"].items():
         reference = service["image"]
