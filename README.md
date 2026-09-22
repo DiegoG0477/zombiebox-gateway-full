@@ -174,3 +174,8 @@ Product milestones and deferred physical gates remain open.
 
 Pins the shared native-inventory validation/export core. Source image target is dev.31; active dev.22 services are unchanged and no new image is claimed.
 Product milestone and physical/public distribution gates remain open.
+
+## dev.32 increment
+
+Pins the shared legacy phone-file container increment for Full. Source image target is dev.32; active services are not replaced. Candidate build evidence is recorded in the workspace checkpoint.
+Product milestones, physical validation and public distribution remain open.
