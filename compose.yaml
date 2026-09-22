@@ -1,7 +1,7 @@
 name: zombie-box-tv
 services:
   gateway:
-    image: zombie-box-tv/gateway:0.1.0-dev.27
+    image: zombie-box-tv/gateway:0.1.0-dev.29
     build:
       context: ${ZOMBIE_CORE_DIR:-../gateway-core}
       dockerfile: ${ZOMBIE_FULL_DIR:-../gateway-full}/Dockerfile
@@ -58,7 +58,7 @@ services:
     restart: unless-stopped
 
   discovery:
-    image: zombie-box-tv/gateway:0.1.0-dev.27
+    image: zombie-box-tv/gateway:0.1.0-dev.29
     network_mode: host
     command:
       [

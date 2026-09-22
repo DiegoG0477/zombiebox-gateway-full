@@ -159,3 +159,8 @@ One-command source/release installation, preserved private runtime, digest-only 
 ## dev.27 increment
 
 Pins the shared evidence-gated 1080p Cast negotiation core. The Compose build target is dev.27; no new image was built or deployed in this checkpoint, preserving the reclaimed disk space. Active services remain unchanged. Physical and distribution gates remain open.
+
+## dev.29 increment
+
+Pins the shared audio-only Cast core. Source image target advances to dev.29; no image rebuild or active-service replacement is claimed.
+Product milestones and physical acceptance remain open.
