@@ -129,7 +129,7 @@ volume. YouTube TV Code/DIAL controls the TV receiver; it is separate from a
 YouTube account sign-in. A packaged process being up does not prove an account is
 ready or that a physical sender/player works.
 
-The **source checkout after dev.56** also supports read-only YouTube account
+The **current source checkout (dev.59)** also supports read-only YouTube account
 browsing. This is not in the published dev.52 images. Create a Google OAuth client
 of type **TVs and Limited Input devices** in a Google Cloud project with the
 YouTube Data API enabled. Set its client ID, and its client secret if issued, in
@@ -155,6 +155,8 @@ must provide one.
 
 The published dev.52 images are frozen. New Go/Client changes in this checkout
 are **not** present in that release until a later release rebuilds/publishes them.
+The local source Compose image is tagged `0.1.0-dev.59` and includes the account
+flow; its host smoke checks do not prove real Google authorization or TV behavior.
 
 For an offline installation, use the separate image archive and Compose bundle:
 
