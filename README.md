@@ -129,6 +129,30 @@ volume. YouTube TV Code/DIAL controls the TV receiver; it is separate from a
 YouTube account sign-in. A packaged process being up does not prove an account is
 ready or that a physical sender/player works.
 
+The **source checkout after dev.56** also supports read-only YouTube account
+browsing. This is not in the published dev.52 images. Create a Google OAuth client
+of type **TVs and Limited Input devices** in a Google Cloud project with the
+YouTube Data API enabled. Set its client ID, and its client secret if issued, in
+the private Compose environment file: `.local/gateway/compose.env` for a source
+install, or `.env` beside `compose.yaml` for a future downloaded release that
+includes this feature. For a downloaded bundle, from its installation directory:
+
+```sh
+printf '\nZOMBIE_YOUTUBE_OAUTH_CLIENT_ID=%s\n' 'YOUR_TV_OAUTH_CLIENT_ID' >> .env
+chmod 600 .env
+docker compose up -d gateway
+```
+
+In Client, open **YouTube → YouTube account → Connect account**. On another
+device open the displayed verification URL, enter the code, and return to
+**Check authorization** after the specified interval. Subscriptions and Playlists
+then open through the existing YouTube browse worker. **Disconnect account** asks
+for the current operator code. The Gateway stores access/refresh tokens in
+private SQLite; the TV APK stores neither Google tokens nor the client secret.
+TV Code does not authorize account browsing. A project-supplied OAuth client ID
+in a later release could remove this one-time operator step; for now the operator
+must provide one.
+
 The published dev.52 images are frozen. New Go/Client changes in this checkout
 are **not** present in that release until a later release rebuilds/publishes them.
 
