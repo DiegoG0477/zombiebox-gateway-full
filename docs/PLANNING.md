@@ -216,3 +216,10 @@ Spotify source revision. GitHub asset hashes, anonymous registry manifest access
 checksummed installer download and simulated pull/up passed. The versioned
 installer and main README now select dev.52. The active dev.22 containers were
 not changed. Runtime, account and physical-device gates remain open.
+
+## dev.54 — shared AirPlay receiver coverage pin
+
+The development checkout consumes Core dev.48's authenticated video-to-audio-to-idle
+receiver integration test. Public Full dev.52 digests and source identities remain
+frozen; no image was rebuilt or active dev.22 service replaced. Host checks pass.
+Real iOS, provider-account and device playback remain unverified.
