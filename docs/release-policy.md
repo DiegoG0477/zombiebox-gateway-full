@@ -25,3 +25,11 @@ Retain registry manifests/layers and matching notices/sources for older releases
 SHA256 identity alone does not keep a deleted artifact available. Private Docker
 archives permit offline redeployment. Exact source rebuilds, public source closure,
 publication and physical compatibility are separate evidence gates.
+
+The optional dev.46 Spotify image has an unresolved dependency-license review:
+the pinned `xlab/vorbis-go` module has no explicit license in its source archive
+or upstream repository. The corresponding-source archive and image hash do not
+grant redistribution rights. Do not treat that optional image as cleared for
+further redistribution or include it in a new release until a licensed decoder
+replacement is built and verified, or upstream confirms a distributable license.
+This does not alter the already-published immutable image identity.

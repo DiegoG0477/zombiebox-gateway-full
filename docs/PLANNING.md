@@ -184,3 +184,14 @@ pins. This only admits the Node24-compatible wrapper contract for future builds.
 The published dev.46 images, source archives, manifest digests and one-line
 installer remain immutable at their original Core commit. No image was rebuilt or
 running service replaced. Product and physical gates remain open.
+
+## dev.51 — dependency-license gate on optional Spotify
+
+Full now consumes Core dev.46's authenticated DASH alternate-audio host coverage.
+The published dev.46 images and source identities remain frozen. A later source
+review found no explicit license for `xlab/vorbis-go`, a binding linked by the
+optional Spotify image. The dev.46 release notes and current installation docs
+flag that image for review; default Compose does not start Spotify. Replace the
+binding with a reviewed distributable decoder or obtain an explicit upstream
+license before a new Spotify image is shipped. All product/physical gates remain
+open and active dev.22 services are unchanged.

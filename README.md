@@ -46,8 +46,14 @@ Default services are gateway, discovery, MediaMTX and YouTube, plus the complete
 initializer. Optional receivers/browser can be added with:
 
 ```sh
-docker compose --profile spotify --profile airplay --profile youtube-receiver --profile rebrowser up -d
+docker compose --profile airplay --profile youtube-receiver --profile rebrowser up -d
 ```
+
+The published dev.46 Spotify image is under dependency-license review: its pinned
+`go-librespot` source links `xlab/vorbis-go`, which has no explicit license in the
+module archive or upstream repository. Do not redistribute that optional image
+until the binding is replaced or its license is confirmed. The default installation
+does not start Spotify. See [release policy](docs/release-policy.md).
 
 Threadfin is optional; direct IPTV M3U works without it. Configure IPTV/Plex/Jellyfin/
 Stremio in Client Settings. Existing worker configuration is preserved in named
