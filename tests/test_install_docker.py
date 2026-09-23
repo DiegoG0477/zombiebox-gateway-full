@@ -38,6 +38,8 @@ class DockerInstallerTests(unittest.TestCase):
         docker.write_text('#!/bin/sh\nprintf "%s\\n" "$*" >> "$DOCKER_CALLS"\n')
         docker.chmod(0o755)
         self.calls = self.path / "docker-calls"
+        self.channel = self.path / "channel.txt"
+        self.channel.write_text(VERSION + "\n")
 
     def checksums(self):
         (self.assets / "SHA256SUMS").write_text(
@@ -64,6 +66,7 @@ class DockerInstallerTests(unittest.TestCase):
                 **os.environ,
                 "PATH": str(self.bin) + os.pathsep + os.environ["PATH"],
                 "ZOMBIE_RELEASE_BASE_URL": self.assets.as_uri(),
+                "ZOMBIE_INSTALL_CHANNEL_URL": self.channel.as_uri(),
                 "DOCKER_CALLS": str(self.calls),
             },
         )
@@ -95,6 +98,35 @@ class DockerInstallerTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("publication gate", result.stderr)
         self.assertEqual(self.calls.read_text().splitlines(), ["compose version"])
+
+    def test_rejects_bad_channel_without_download_or_start(self):
+        self.channel.write_text("v0.1.0-dev.54;invalid\n")
+        result = self.install()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse(self.calls.exists())
+
+    def test_explicit_version_does_not_need_channel(self):
+        self.channel.unlink()
+        result = subprocess.run(
+            [
+                "sh",
+                str(ROOT / "install-docker.sh"),
+                "--version",
+                VERSION,
+                "--directory",
+                str(self.path / "installed"),
+            ],
+            text=True,
+            capture_output=True,
+            env={
+                **os.environ,
+                "PATH": str(self.bin) + os.pathsep + os.environ["PATH"],
+                "ZOMBIE_RELEASE_BASE_URL": self.assets.as_uri(),
+                "ZOMBIE_INSTALL_CHANNEL_URL": self.channel.as_uri(),
+                "DOCKER_CALLS": str(self.calls),
+            },
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
 
 
 if __name__ == "__main__":

@@ -40,6 +40,13 @@ workspace's ADR 0020 records the feature and process boundaries.
 
 ## Installation
 
+Choose one route. The **published Docker release** is the simplest installation;
+the **private dev63 bundle** at `gateway-full/.local/builds/dev63-full` is the
+newer, local first-test candidate. They contain different gateway binaries. A
+source tag such as `v0.1.0-dev.54` does not imply downloadable Docker assets.
+See the [Full release page](https://github.com/ZombieBox-tv/zombiebox-gateway-full/releases)
+for actual published packages.
+
 ### 1. Install on a Linux host
 
 Full release packages contain a `compose.yaml` that runs a one-shot initialization
@@ -48,11 +55,20 @@ volumes, preserves existing credentials, and supplies diagnostic fixtures. No ho
 Go, Python, Node, FFmpeg or upstream checkout is needed. Heavy services remain optional
 Compose profiles; their account readiness is independent of process startup.
 
-Install the frozen public development release with one command:
+Install the current **published, installable** Full release with one command:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/ZombieBox-tv/zombiebox-gateway-full/v0.1.0-dev.52/install-docker.sh | sh -s -- --version v0.1.0-dev.52
+curl -fsSL https://raw.githubusercontent.com/ZombieBox-tv/zombiebox-gateway-full/main/install-docker.sh | sh
 ```
+
+The installer reads `install-channel.txt` from `main`; maintainers advance that
+pointer only after a release has complete public Docker assets. It currently
+selects dev.52, the newest published Full package, rather than the newest
+source-only checkpoint. Each installation verifies the release's checksums,
+publication gate, version and pinned image digests. For a deliberate rollback,
+pass `--version v0.1.0-dev.52` to the command above. Do not substitute a source
+tag into the raw GitHub URL: dev.54 returns 404 because no installer was published
+for that tag.
 
 The installer downloads the release's checksummed `compose.yaml`, static
 `seccomp.json`, license, notices and lock; then runs `docker compose pull` and
@@ -72,12 +88,16 @@ docker compose ps --all
 docker compose exec gateway cat /config/operator.code
 ```
 
-The last command reads the private six-digit operator code directly. The dev.52
-gateway also prints that code at startup, so the installer's `logs gateway` hint
+The last command reads the private six-digit operator code directly. It lives in
+the persistent `gateway` named volume at `/config/operator.code`; a normal
+container restart or `docker compose down` followed by `up -d` keeps it. Only
+deleting the data volume (`down -v`) discards it. This is ZombieBox's local
+pairing/admin code, not a provider API key or a temporary Google/Spotify code.
+The dev.52 gateway also prints that code at startup, so the installer's `logs gateway` hint
 works, but includes unrelated log output. Do not post the code, gateway startup
 logs or `providers.json` in issues.
 
-### 2. Connect and add your services
+### 2. Connect and add your credentials
 
 Install Zombie Client on the TV and open **Settings → Connect gateway**. Select
 the discovered Linux host or enter `http://HOST_LAN_IP:8090`; then enter the
@@ -91,6 +111,23 @@ plus token/user ID, or a Stremio endpoint/catalog. These values persist in the
 gateway's private SQLite database. The client receives only enabled/ready status.
 An M3U does **not** need Threadfin. You can start with IPTV alone and add other
 accounts later.
+
+| Service | Credential or address, and where it comes from |
+| --- | --- |
+| IPTV | Your provider's HTTP(S) M3U playlist URL, plus an optional XMLTV guide URL. A public playlist needs no account token; direct M3U needs no Threadfin. |
+| Plex | Your Plex server URL and an `X-Plex-Token` from [Plex's token guide](https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/). Its simple retrieval method can yield a temporary token. |
+| Jellyfin | Your server URL, an API key from its **Admin Dashboard → API Keys**, and the intended user's ID from **Admin Dashboard → Users**. The gateway requires all three; see [Jellyfin user administration](https://jellyfin.org/docs/general/server/users/adding-managing-users/). ZombieBox does not issue these. |
+| Stremio | An add-on endpoint/catalog you choose, normally its [`manifest.json` URL](https://stremio.github.io/stremio-addon-guide/step1). There is no universal Stremio key; a private add-on URL may itself carry a secret. |
+| YouTube catalog / TV Code | No personal API key for anonymous browsing or receiver pairing. Full creates the internal worker tokens automatically. TV Code is separate from Google account authorization. |
+| Spotify Connect | Enable its optional profile, then authorize with the URL/code shown under Client **Services** and your own Spotify account. Do not enter a Spotify password or developer key in Client settings. |
+| AirPlay / Cast / Rebrowser | No Apple/Cast developer key. Enable the required profile; Full generates internal worker tokens and an AirPlay receiver PIN. Pair Zombie Cast through TV consent. |
+| YouTube subscriptions/playlists (private candidate only) | The operator creates a **TVs and Limited Input devices** OAuth client in [Google Cloud](https://developers.google.com/youtube/v3/guides/auth/devices) with YouTube Data API enabled, then sets its client ID and optional secret on the gateway. The viewer approves the Client's displayed URL/code. Published dev.52 does not include this feature. |
+
+Put IPTV/Plex/Jellyfin/Stremio values in Client **Settings → Providers** after
+pairing. The gateway saves them in private SQLite, never in the APK. Only use
+the server file below if you want that provider managed centrally; its entry
+overrides the Client form. Backups of the gateway database and volumes contain
+secrets.
 
 The initialization container creates `/config/providers.json` in the private
 `gateway` volume. Its entries for the packaged YouTube, Spotify, AirPlay and
@@ -129,8 +166,8 @@ volume. YouTube TV Code/DIAL controls the TV receiver; it is separate from a
 YouTube account sign-in. A packaged process being up does not prove an account is
 ready or that a physical sender/player works.
 
-The **current source checkout (dev.60)** also supports read-only YouTube account
-browsing. This is not in the published dev.52 images. Create a Google OAuth client
+The **current source checkout and private dev63 bundle** also support read-only
+YouTube account browsing. This is not in the published dev.52 images. Create a Google OAuth client
 of type **TVs and Limited Input devices** in a Google Cloud project with the
 YouTube Data API enabled. Set its client ID, and its client secret if issued, in
 the private Compose environment file: `.local/gateway/compose.env` for a source
@@ -158,19 +195,34 @@ are **not** present in that release until a later release rebuilds/publishes the
 The local source Compose image is tagged `0.1.0-dev.60` and includes the account
 flow; its host smoke checks do not prove real Google authorization or TV behavior.
 
-For a **private offline bundle built from this checkout**, enter its directory
-and prepare a dedicated `full-test` runtime. This generates one private,
-persistent six-digit operator code before any container starts:
+For the **existing private offline bundle**, enter its actual directory on the
+Fedora development host and prepare a dedicated `full-test` runtime:
 
 ```sh
+cd /home/diego/zombie-tv-project/gateway-full/.local/builds/dev63-full
+sha256sum --check SHA256SUMS
 bash install.sh --prepare-only
 cat "${XDG_DATA_HOME:-$HOME/.local/share}/zombiebox/full-test/.local/gateway/config/operator.code"
 bash install.sh --profile youtube
 ```
 
-The code is also passed to the gateway through its private Compose environment.
-Do not paste it into bug reports. The offline bundle loads its own frozen image
-archive; it does not pull or compile. Host Python3 is used only by this private
+The first `--prepare-only` creates one private six-digit code at the displayed
+`full-test/.local/gateway/config/operator.code` path and records the same value
+as `ZOMBIE_PAIRING_CODE` in `full-test/.local/gateway/compose.env`. Repeating
+preparation, restarting containers or reinstalling with the same runtime keeps
+it. If those two files disagree, setup fails rather than rotating the code.
+Enter the code in Client **Settings → Connect gateway**, then again when saving
+provider credentials. To set server-managed providers directly, edit
+`full-test/.local/gateway/config/providers.json` under the same runtime and keep
+the generated worker entries/tokens. Rerun `bash install.sh --profile youtube`
+to apply changes. For YouTube account browsing, set
+`ZOMBIE_YOUTUBE_OAUTH_CLIENT_ID` and optional
+`ZOMBIE_YOUTUBE_OAUTH_CLIENT_SECRET` in that private `compose.env` before
+starting. They do not belong in `providers.json` or the APK. The operator code,
+`compose.env`, `providers.json`, SQLite database and backups must remain private.
+
+The offline bundle loads its own frozen image archive; it does not pull or
+compile. Host Python3 is used only by this private
 offline installer, not by the public Docker-only release installer. Source
 checkouts instead keep the same private code under the `full` runtime.
 

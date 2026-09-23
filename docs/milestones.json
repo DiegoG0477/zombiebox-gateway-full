@@ -3,6 +3,7 @@
   "repository": "zombiebox-gateway-full",
   "productRegistry": "workspace:docs/milestones.json",
   "notes": [
+    "Dev.64: Full README gives credential sources, public/private operator-code persistence and exact dev63 offline-bundle steps. The main installer selects an installable release channel, currently published dev.52; explicit versions retain frozen identities. Host checks pass; no new binary, deployment or physical gate closes.",
     "Dev.63: Source/private Full Compose pins the reviewed licensed Spotify image by public SHA256 digest instead of selecting the old local image; source installation no longer rebuilds Spotify. A new private bundle must be regenerated. Physical/public gates remain open.",
     "Dev.62: A source-revision builder verifies the current gateway image inventory and reuses dev.46/dev.52 corresponding sources only when every linked Go module, Go toolchain and Alpine recipe has the same identity. It stages a current Core/Full source delta; publication remains separate.",
     "Dev.61: Private Full bundle construction reuses bounded cached UHD probe assets only after the Core generator validates them, so an 8 GB development host can package without re-encoding 4K on each build. Public/physical gates remain open.",

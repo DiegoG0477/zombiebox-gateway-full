@@ -5,6 +5,14 @@ versions and record any holdback. Freeze library locks, source commits and servi
 image digests before shipping. `latest` may inform a maintainer's review; no install
 or runtime path follows it. A changed dependency set requires a new release.
 
+`install-channel.txt` is a mutable pointer to the newest **installable** Full
+release, not an image tag or dependency selector. Advance it only after the
+GitHub release has all assets required by `install-docker.sh`, the publication
+gate and checksum verification pass, and anonymous GHCR pulls succeed. Source
+checkpoint tags alone never advance the channel. The installer still downloads
+the selected release's immutable lock and digest-pinned Compose file; callers
+may pass `--version` for a reproducible older deployment.
+
 `compose-bundle.py` requires an explicit `--version` and a new output directory. Its
 `release.lock.json` records the ZombieBox version, mode, exact service identities,
 packaging/configuration commits and local dirty status. Registry mode rejects mutable

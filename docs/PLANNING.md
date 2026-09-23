@@ -1,5 +1,14 @@
 # zombiebox-gateway-full: component work
 
+## dev.64 onboarding and installable release channel
+
+The public one-line installer follows `install-channel.txt`, which stays at
+published dev.52 until a later complete Full package passes publication checks.
+An explicit version still installs its frozen asset set. README separates the
+public named-volume operator code from the private dev63 bundle's persistent
+`full-test` code/environment and lists where each provider credential comes
+from. Host installer/Compose checks do not validate physical devices or accounts.
+
 ## dev.55 onboarding documentation
 
 Explain the actual Compose/Core/worker architecture, the published installer,

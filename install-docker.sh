@@ -2,9 +2,10 @@
 # Install one immutable Full release using only curl, sha256sum and Docker Compose.
 set -eu
 
-VERSION=v0.1.0-dev.52
+VERSION=
 REPOSITORY=ZombieBox-tv/zombiebox-gateway-full
 DESTINATION=${XDG_DATA_HOME:-"$HOME/.local/share"}/zombiebox/full/releases
+CHANNEL_URL=${ZOMBIE_INSTALL_CHANNEL_URL:-"https://raw.githubusercontent.com/$REPOSITORY/main/install-channel.txt"}
 
 usage() {
     printf 'Usage: sh install-docker.sh [--version vX.Y.Z] [--directory PATH]\n' >&2
@@ -27,6 +28,20 @@ while [ "$#" -gt 0 ]; do
     esac
 done
 
+for required in curl sha256sum docker mktemp; do
+    command -v "$required" >/dev/null 2>&1 || {
+        printf 'Missing required command: %s\n' "$required" >&2
+        exit 1
+    }
+done
+
+if [ -z "$VERSION" ]; then
+    VERSION=$(curl --fail --location --silent --show-error --retry 3 \
+        --connect-timeout 10 --max-time 30 --max-filesize 128 "$CHANNEL_URL") || {
+        printf 'Could not resolve the current installable Full release.\n' >&2
+        exit 1
+    }
+fi
 case "$VERSION" in
     v[0-9]*.[0-9]*.[0-9]*) ;;
     *) usage ;;
@@ -35,12 +50,6 @@ case "$VERSION" in
     *[!a-zA-Z0-9.-]*) usage ;;
 esac
 
-for required in curl sha256sum docker mktemp; do
-    command -v "$required" >/dev/null 2>&1 || {
-        printf 'Missing required command: %s\n' "$required" >&2
-        exit 1
-    }
-done
 docker compose version >/dev/null
 
 mkdir -p "$DESTINATION"
