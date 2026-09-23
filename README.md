@@ -21,15 +21,16 @@ Compose profiles; their account readiness is independent of process startup.
 Install the frozen public development release with one command:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/ZombieBox-tv/zombiebox-gateway-full/v0.1.0-dev.46/install-docker.sh | sh
+curl -fsSL https://raw.githubusercontent.com/ZombieBox-tv/zombiebox-gateway-full/v0.1.0-dev.52/install-docker.sh | sh -s -- --version v0.1.0-dev.52
 ```
 
 The installer downloads the release's checksummed `compose.yaml`, static
 `seccomp.json`, license, notices and lock; then runs `docker compose pull` and
-`docker compose up -d`. Its nine GHCR images were verified by anonymous digest
-requests and a clean anonymous Compose pull. The release includes their complete
-corresponding sources. The bundle stays under
-`${XDG_DATA_HOME:-$HOME/.local/share}/zombiebox/full/releases/v0.1.0-dev.46`.
+`docker compose up -d`. Its nine GHCR images use immutable digests verified through
+anonymous registry requests. Eight retain their dev.46 identities; Spotify uses a
+new licensed dev.52 image. The release source index pins the unchanged dev.46
+source archives and includes a new Spotify archive with every linked Go module. The bundle stays
+under `${XDG_DATA_HOME:-$HOME/.local/share}/zombiebox/full/releases/v0.1.0-dev.52`.
 Run `docker compose -f PATH/compose.yaml logs gateway` using the path printed by
 the installer to read the local operator code. Keep that code private.
 
@@ -49,11 +50,11 @@ initializer. Optional receivers/browser can be added with:
 docker compose --profile airplay --profile youtube-receiver --profile rebrowser up -d
 ```
 
-The published dev.46 Spotify image is under dependency-license review: its pinned
-`go-librespot` source links `xlab/vorbis-go`, which has no explicit license in the
-module archive or upstream repository. Do not redistribute that optional image
-until the binding is replaced or its license is confirmed. The default installation
-does not start Spotify. See [release policy](docs/release-policy.md).
+The old dev.46 Spotify image remains under dependency-license review because it
+links `xlab/vorbis-go` without an explicit license. The dev.52 Spotify image replaces
+that binding with reviewed MIT Ogg/Vorbis modules and ships corresponding sources.
+The default installation does not start Spotify; enable it after account setup.
+See [release policy](docs/release-policy.md).
 
 Threadfin is optional; direct IPTV M3U works without it. Configure IPTV/Plex/Jellyfin/
 Stremio in Client Settings. Existing worker configuration is preserved in named

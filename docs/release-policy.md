@@ -33,3 +33,10 @@ grant redistribution rights. Do not treat that optional image as cleared for
 further redistribution or include it in a new release until a licensed decoder
 replacement is built and verified, or upstream confirms a distributable license.
 This does not alter the already-published immutable image identity.
+
+Full dev.52 replaces the optional Spotify image with a source-closed image using
+MIT `oggvorbis` and `vorbis` modules. The release source index pins unchanged
+dev.46 source parts by SHA256/public URL and includes the exact patched Spotify
+source, linked module archives, image inventory and first-party snapshots.
+The old dev.46 image remains frozen with its disclosed license gate; new releases
+must use the dev.52 Spotify digest or a separately reviewed successor.

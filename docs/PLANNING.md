@@ -206,3 +206,13 @@ image inventory, patched source, Core and Full source snapshots, and every linke
 Go module archive. The old dev.46 release remains frozen and its Spotify license
 gate remains disclosed. The new public release, anonymous pull and device/account
 behavior require separate evidence. Active dev.22 services are unchanged.
+
+## dev.53 — public licensed Full image set
+
+A new dev.52 prerelease now supplies nine digest-pinned public GHCR images, eight
+unchanged from dev.46 and one licensed Spotify replacement. Its SHA256-pinned
+source index links the three immutable dev.46 source parts and the new 16 MB
+Spotify source revision. GitHub asset hashes, anonymous registry manifest access,
+checksummed installer download and simulated pull/up passed. The versioned
+installer and main README now select dev.52. The active dev.22 containers were
+not changed. Runtime, account and physical-device gates remain open.

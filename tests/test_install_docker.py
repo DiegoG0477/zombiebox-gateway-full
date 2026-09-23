@@ -8,7 +8,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "v0.1.0-dev.46"
+VERSION = "v0.1.0-dev.52"
 ASSETS = (
     "compose.yaml",
     "seccomp.json",
@@ -29,7 +29,7 @@ class DockerInstallerTests(unittest.TestCase):
         for name in ASSETS:
             (self.assets / name).write_text(name + "\n")
         (self.assets / "release.lock.json").write_text(
-            '{"zombieboxVersion": "v0.1.0-dev.46", "publicationReady": true}\n'
+            '{"zombieboxVersion": "v0.1.0-dev.52", "publicationReady": true}\n'
         )
         self.checksums()
         self.bin = self.path / "bin"
@@ -88,7 +88,7 @@ class DockerInstallerTests(unittest.TestCase):
 
     def test_rejects_unpublished_manifest(self):
         (self.assets / "release.lock.json").write_text(
-            '{"zombieboxVersion": "v0.1.0-dev.46", "publicationReady": false}\n'
+            '{"zombieboxVersion": "v0.1.0-dev.52", "publicationReady": false}\n'
         )
         self.checksums()
         result = self.install()

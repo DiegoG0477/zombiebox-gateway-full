@@ -2,7 +2,7 @@
 # Install one immutable Full release using only curl, sha256sum and Docker Compose.
 set -eu
 
-VERSION=v0.1.0-dev.46
+VERSION=v0.1.0-dev.52
 REPOSITORY=ZombieBox-tv/zombiebox-gateway-full
 DESTINATION=${XDG_DATA_HOME:-"$HOME/.local/share"}/zombiebox/full/releases
 
