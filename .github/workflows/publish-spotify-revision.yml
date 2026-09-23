@@ -61,8 +61,8 @@ jobs:
               names = set(archive.getnames())
               assert {'inventory/spotify.json', 'source/gateway-core.tar',
                       'source/gateway-full.tar', 'source/go-librespot/go.mod'} <= names
-              assert any(name.startswith('go/github.com_jfreymuth_oggvorbis@') for name in names)
-              assert any(name.startswith('go/github.com_jfreymuth_vorbis@') for name in names)
+              assert any(name.startswith('go/github.com_jfreymuth_oggvorbis_v1.0.5.') for name in names)
+              assert any(name.startswith('go/github.com_jfreymuth_vorbis_v1.0.2.') for name in names)
           for binary in inventory['goBinaries']:
               assert not any(item['path'] == 'github.com/xlab/vorbis-go'
                              for item in binary['dependencies'])
