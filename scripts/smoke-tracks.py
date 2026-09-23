@@ -10,7 +10,7 @@ import urllib.request
 import uuid
 from pathlib import Path
 
-IMAGE = os.environ.get("ZOMBIE_SMOKE_IMAGE", "zombie-box-tv/gateway:0.1.0-dev.43")
+IMAGE = os.environ.get("ZOMBIE_SMOKE_IMAGE", "zombie-box-tv/gateway:0.1.0-dev.58")
 
 
 def command(*args):

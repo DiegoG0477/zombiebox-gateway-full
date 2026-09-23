@@ -238,3 +238,12 @@ Dev.56: Pins Core dev.50 IPTV category contract and host tests. Published Full d
 ## v0.1.0-dev.57 — account/receiver pin
 
 Dev.57: Pins Core dev.51 YouTube account OAuth and Spotify receiver lifecycle host coverage; adds optional OAuth environment to source Compose and README. Published Full dev.52 images remain frozen; real accounts and devices are unverified.
+
+## v0.1.0-dev.58 — golden media core pin
+
+Dev.58: Pins Core dev.52 golden media fixtures and gives the source-built gateway/discovery image a new dev.58 local tag. Public Full dev.52 digests and active dev.22 remain unchanged; RTSP/account/device acceptance remains open.
+
+The local dev.58 gateway image was built from this clean Core pin. Isolated
+packaged track/subtitle/SQLite and remote HLS/DASH/live A/V smokes pass; they
+started only temporary test containers. No active service was upgraded and no
+registry or release asset was published.
