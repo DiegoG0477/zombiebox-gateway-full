@@ -186,6 +186,9 @@ docker compose --profile airplay --profile youtube-receiver --profile rebrowser 
 The old dev.46 Spotify image remains under dependency-license review because it
 links `xlab/vorbis-go` without an explicit license. The dev.52 Spotify image replaces
 that binding with reviewed MIT Ogg/Vorbis modules and ships corresponding sources.
+The current source Compose graph pins that licensed image by its published
+digest. Its private offline bundle includes the image, so enabling Spotify
+cannot select the older local build.
 The default installation does not start Spotify; enable it after account setup.
 See [release policy](docs/release-policy.md).
 
@@ -243,8 +246,9 @@ bash install.sh --profile youtube --profile spotify
 ```
 
 Supported profiles: `youtube`, `youtube-receiver`, `spotify`, `airplay`, `threadfin`,
-`rebrowser`. Source builds of Spotify/AirPlay/Threadfin require their locked
-references (`make -C ../gateway-core references`). Enabling a worker does not supply
+`rebrowser`. AirPlay/Threadfin source builds require their locked references
+(`make -C ../gateway-core references`); Spotify uses its frozen licensed GHCR
+image. Enabling a worker does not supply
 accounts or certify receiver compatibility. Existing provider URLs/tokens are kept.
 
 Only discovery and receivers that need LAN multicast use host networking. Core and

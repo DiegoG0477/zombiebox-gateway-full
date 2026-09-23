@@ -239,6 +239,15 @@ Dev.56: Pins Core dev.50 IPTV category contract and host tests. Published Full d
 
 Dev.57: Pins Core dev.51 YouTube account OAuth and Spotify receiver lifecycle host coverage; adds optional OAuth environment to source Compose and README. Published Full dev.52 images remain frozen; real accounts and devices are unverified.
 
+## v0.1.0-dev.63 — licensed Spotify image in source/private Full
+
+The source Compose graph now selects the reviewed Spotify dev.52 image by its
+published digest, not the earlier local image with the unresolved decoder
+license. Private offline bundles include that frozen image. Source installation
+no longer builds Spotify from local clones; AirPlay and Threadfin remain opt-in
+source builds. This aligns private first-test packaging with the reviewed public
+source set; real Spotify account and receiver behavior remain acceptance gates.
+
 ## v0.1.0-dev.62 — current gateway source closure
 
 A source-revision builder can stage the current gateway image's corresponding

@@ -135,12 +135,7 @@ services:
 
   spotify:
     profiles: [spotify]
-    image: zombie-box-tv/spotify:0.1.0-dev.37
-    build:
-      context: ${ZOMBIE_CORE_DIR:-../gateway-core}
-      dockerfile: wrappers/spotify/Dockerfile
-      additional_contexts:
-        sources: ${ZOMBIE_RUNTIME_ROOT:-.}/.local/build-sources
+    image: ghcr.io/zombiebox-tv/spotify@sha256:919e7995e8ae2c53c2b9ad756e15d364eccdecb3f3ab3bf6c67b19529bbde843
     user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
     volumes:
       - ${ZOMBIE_RUNTIME_ROOT:-.}/.local/spotify/worker.json:/config/worker.json:ro,Z
