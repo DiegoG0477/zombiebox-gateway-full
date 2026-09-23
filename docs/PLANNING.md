@@ -166,3 +166,13 @@ pull, the public Compose assets and the one-line README command remain gated.
 This checkout consumes the test-only Core dev.44 media coverage increment; the
 dev.46 image and source identities stay frozen. Active dev.22 services were not
 replaced. No product or physical milestone closes.
+
+## dev.48 — public Full installation
+
+The source-complete dev.46 image set now has nine publicly pullable GHCR digests.
+Seven checksummed Compose installation assets are attached to the same prerelease.
+Their remote digests match local files, and a clean anonymous Docker config pulled
+all nine images. The version-pinned installer fetched and verified the release and
+its pull/up sequence passed with Docker simulated; active dev.22 services were not
+replaced. The root and Full READMEs now make that one-line command the default.
+Product milestones, physical devices and real provider accounts remain unverified.

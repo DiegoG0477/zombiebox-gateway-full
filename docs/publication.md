@@ -59,6 +59,18 @@ checksums and the receipt for nine GHCR image digests. The OCI archive stores
 inventory IDs as top-level image descriptors, while `docker load` exposes config
 IDs. The publisher follows and verifies the OCI descriptor-to-manifest-to-config
 hash chain before it tags a loaded image. Its tested workflow completed successfully.
-At this checkpoint all nine GHCR packages are private; no anonymous pull or public
-Compose bundle is claimed. The generated digest-only bundle is held locally with
-`publicationReady=false` until the package visibility and finalizer checks pass.
+At this checkpoint all nine GHCR packages were private; no anonymous pull or public
+Compose bundle was claimed. The generated digest-only bundle was held locally with
+`publicationReady=false` until the package visibility and finalizer checks passed.
+
+## dev.48 — public Full installation
+
+The organization made all nine GHCR packages public. The finalizer checked every
+frozen manifest digest anonymously and produced the seven-asset Compose bundle
+with `publicationReady=true`. The assets were uploaded to the dev.46 prerelease;
+their remote SHA256 digests match local files. An unauthenticated Docker config
+pulled all nine images through Compose. The installer downloaded and verified the
+published bundle; its pull/up sequence was tested without changing running services.
+The version-pinned one-line command is now the default README path. Source closure
+and image identities remain those of dev.46; no tag or digest was moved. Physical,
+account and receiver acceptance gates remain open.

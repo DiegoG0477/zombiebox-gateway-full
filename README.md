@@ -18,21 +18,22 @@ volumes, preserves existing credentials, and supplies diagnostic fixtures. No ho
 Go, Python, Node, FFmpeg or upstream checkout is needed. Heavy services remain optional
 Compose profiles; their account readiness is independent of process startup.
 
-Keep the downloaded bundle together: it includes the static `seccomp.json` used
-by the optional sandboxed browser. No host script is needed to generate it.
-
-The public release contract is:
+Install the frozen public development release with one command:
 
 ```sh
-# From the downloaded version's Compose bundle, once public images exist:
-docker compose pull
-docker compose up -d
+curl -fsSL https://raw.githubusercontent.com/ZombieBox-tv/zombiebox-gateway-full/v0.1.0-dev.46/install-docker.sh | sh
 ```
 
-**Public GHCR installation is still pending.** The nine dev.46 images and their
-matching sources are uploaded, but GitHub created the GHCR packages privately.
-The one-line installer will be advertised only after anonymous digest pulls pass.
-For the prepared private offline candidate, use only Docker:
+The installer downloads the release's checksummed `compose.yaml`, static
+`seccomp.json`, license, notices and lock; then runs `docker compose pull` and
+`docker compose up -d`. Its nine GHCR images were verified by anonymous digest
+requests and a clean anonymous Compose pull. The release includes their complete
+corresponding sources. The bundle stays under
+`${XDG_DATA_HOME:-$HOME/.local/share}/zombiebox/full/releases/v0.1.0-dev.46`.
+Run `docker compose -f PATH/compose.yaml logs gateway` using the path printed by
+the installer to read the local operator code. Keep that code private.
+
+For an offline installation, use the separate image archive and Compose bundle:
 
 ```sh
 docker image load -i images.tar
@@ -149,10 +150,10 @@ candidate. Existing configuration is not copied. Set `ZOMBIE_COMPOSE_PROJECT` an
 Use `control.sh down` to remove this project's containers/network without deleting
 persistent state. Logs may contain provider-specific information; review before sharing.
 
-This provides repeatable deployment of the saved Linux architecture, not a promise
-of bit-for-bit source rebuilds, completed physical validation or public redistribution.
-No external registry is required for installation; provider content still needs network
-access. Complete corresponding sources and public GHCR delivery follow separately.
+This provides repeatable offline deployment of the saved Linux architecture, not a
+promise of bit-for-bit source rebuilds or completed physical validation. No external
+registry is required for that offline installation; provider content still needs
+network access. The public GHCR installation above uses the separate frozen release.
 The author's device test manual is intentionally kept outside this repository.
 
 Registry distribution will use one image per service, pinned as `image@sha256:...`;
@@ -170,8 +171,7 @@ After downloading and verifying the published bundle, run the same `bash install
 It pulls pinned images and starts configured services; no Go, source clones or
 FFmpeg encoder is required on the user's Linux host.
 
-No public image name or download command is advertised as working before that
-publication exists. Compose is the complete installation path; a bare `docker run`
+Compose is the complete installation path; a bare `docker run`
 command omits relay/discovery/worker configuration and is not equivalent.
 
 ```sh
