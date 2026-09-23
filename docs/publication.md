@@ -51,3 +51,14 @@ public merely because `docker push` returned success.
 
 The image set is Linux/amd64. Source closure and host startup do not assert Vizio,
 iOS, Android or account compatibility; milestone exit gates remain separate.
+
+## dev.46 publication checkpoint
+
+The public prerelease contains all source parts, source index, exact image archive,
+checksums and the receipt for nine GHCR image digests. The OCI archive stores
+inventory IDs as top-level image descriptors, while `docker load` exposes config
+IDs. The publisher follows and verifies the OCI descriptor-to-manifest-to-config
+hash chain before it tags a loaded image. Its tested workflow completed successfully.
+At this checkpoint all nine GHCR packages are private; no anonymous pull or public
+Compose bundle is claimed. The generated digest-only bundle is held locally with
+`publicationReady=false` until the package visibility and finalizer checks pass.

@@ -29,8 +29,10 @@ docker compose pull
 docker compose up -d
 ```
 
-**Public GHCR distribution is still pending.** For the prepared private offline
-candidate, use only Docker:
+**Public GHCR installation is still pending.** The nine dev.46 images and their
+matching sources are uploaded, but GitHub created the GHCR packages privately.
+The one-line installer will be advertised only after anonymous digest pulls pass.
+For the prepared private offline candidate, use only Docker:
 
 ```sh
 docker image load -i images.tar

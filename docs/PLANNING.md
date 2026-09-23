@@ -155,3 +155,14 @@ explicit ZombieBox version and freeze all service identities, including initiali
 and MediaMTX. Functional releases review current stable upstream versions and pin
 the compatible set; old release locks/images are retained. Go/Python source/build
 tools remain maintainer-only. Public GHCR/source closure and physical gates stay open.
+
+## dev.47 — corresponding sources and GHCR image publication
+
+The dev.46 prerelease now carries complete corresponding sources, the exact nine-image
+Docker archive and a GHCR digest receipt. The publisher validates OCI image digests
+against loaded config IDs before tagging. All images were pushed under distinct
+versioned service names; at this checkpoint GHCR packages are private, so anonymous
+pull, the public Compose assets and the one-line README command remain gated.
+This checkout consumes the test-only Core dev.44 media coverage increment; the
+dev.46 image and source identities stay frozen. Active dev.22 services were not
+replaced. No product or physical milestone closes.
