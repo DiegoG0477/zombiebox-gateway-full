@@ -1,5 +1,12 @@
 # zombiebox-gateway-full: component work
 
+## dev.55 onboarding documentation
+
+Explain the actual Compose/Core/worker architecture, the published installer,
+private operator code, Client-managed credentials and optional server config.
+Consume Core IPTV favorites in the development pin only; published dev.52 images
+and active dev.22 services remain unchanged. A rebuilt release is needed.
+
 The product milestones relevant to this repository are M0, M6, M7, M8, M9, M11.
 The local registry is a component projection of the workspace plan. Closing a
 component task does not close a product-wide milestone or a physical validation gate.

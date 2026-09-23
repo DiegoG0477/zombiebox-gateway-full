@@ -8,9 +8,39 @@ Development checkpoints are not stable releases or physical compatibility claims
 
 Depends on the exact gateway-core commit in `dependencies.lock.json`.
 
+## How the system works
+
+```text
+Internet services / your media servers / M3U + XMLTV
+              │ modern HTTPS and provider protocols
+              ▼
+Full on Linux: Go gateway ── SQLite + bounded artwork/media caches
+              │       ├─ provider adapters: Plex, Jellyfin, Stremio, IPTV
+              │       ├─ private workers: YouTube, Spotify, AirPlay, Rebrowser
+              │       └─ media tools: FFmpeg, MediaMTX, optional Threadfin
+              │ HTTP/1.1 + semantic JSON; local media URLs and long polling
+              ▼
+Zombie Client APK on the TV ── native UI, D-pad and hardware player
+              ▲
+              │ paired Zombie Cast phone: remote, media and screen sharing
+```
+
+`zombiebox-gateway-core` supplies the **same Go application** to Full and Edge.
+`zombiebox-protocol` defines its client-facing wire contract. Full packages the
+core and each standalone tool in its own digest-pinned image; Compose connects the
+workers on a private network. The YouTube worker adapts YouTube.js; Spotify wraps
+go-librespot; AirPlay wraps UxPlay; Rebrowser runs a private browser worker.
+FFmpeg and MediaMTX handle conversion and the authenticated Cast relay. Optional
+Threadfin manages IPTV upstreams; a plain M3U works without it. The Android APKs
+do not ship or execute these services, and upstream reference clones are build
+inputs, not copies of the running software. The gateway fetches and sizes artwork,
+resolves streams and keeps provider credentials; the TV receives semantic items
+and playable LAN media. SQLite stores pairings, settings and progress. The central
+workspace's ADR 0020 records the feature and process boundaries.
+
 ## Installation
 
-### Default product installation: Docker and Compose only
+### 1. Install on a Linux host
 
 Full release packages contain a `compose.yaml` that runs a one-shot initialization
 container before the gateway/workers. It creates private configuration and named
@@ -31,8 +61,76 @@ anonymous registry requests. Eight retain their dev.46 identities; Spotify uses 
 new licensed dev.52 image. The release source index pins the unchanged dev.46
 source archives and includes a new Spotify archive with every linked Go module. The bundle stays
 under `${XDG_DATA_HOME:-$HOME/.local/share}/zombiebox/full/releases/v0.1.0-dev.52`.
-Run `docker compose -f PATH/compose.yaml logs gateway` using the path printed by
-the installer to read the local operator code. Keep that code private.
+The command prints the installation directory. Docker Engine and Compose v2 are
+the only host runtime requirements; no host Go, Python, Node or FFmpeg is needed.
+Keep the downloaded directory: its `compose.yaml` records the exact image digests.
+From here on, run the commands below **inside that directory**:
+
+```sh
+cd "${XDG_DATA_HOME:-$HOME/.local/share}/zombiebox/full/releases/v0.1.0-dev.52"
+docker compose ps --all
+docker compose exec gateway cat /config/operator.code
+```
+
+The last command reads the private six-digit operator code directly. The dev.52
+gateway also prints that code at startup, so the installer's `logs gateway` hint
+works, but includes unrelated log output. Do not post the code, gateway startup
+logs or `providers.json` in issues.
+
+### 2. Connect and add your services
+
+Install Zombie Client on the TV and open **Settings → Connect gateway**. Select
+the discovered Linux host or enter `http://HOST_LAN_IP:8090`; then enter the
+operator code above. Discovery uses UDP 8098 and can fail on isolated Wi-Fi;
+manual URL remains available. Pairing stores a scoped device token on the client.
+
+In **Settings → Providers**, enter only the services you use. Each save asks for
+the same operator code; the app does not retain provider credentials. Use your M3U
+URL under IPTV (and optional XMLTV URL), Plex server URL plus token, Jellyfin URL
+plus token/user ID, or a Stremio endpoint/catalog. These values persist in the
+gateway's private SQLite database. The client receives only enabled/ready status.
+An M3U does **not** need Threadfin. You can start with IPTV alone and add other
+accounts later.
+
+The initialization container creates `/config/providers.json` in the private
+`gateway` volume. Its entries for the packaged YouTube, Spotify, AirPlay and
+Rebrowser workers are **server-managed** and cannot be changed in Client Settings.
+For an advanced server-side provider entry, edit the file inside the initializer
+container, save valid JSON, then restart the gateway:
+
+```sh
+docker compose run --rm --no-deps --entrypoint sh initialize -c 'vi /seed/gateway/providers.json && chmod 600 /seed/gateway/providers.json'
+docker compose restart gateway
+```
+
+For example, add `"iptv":{"enabled":true,"url":"https://example.org/list.m3u"}`
+as another top-level object member. A provider explicitly listed in this file
+becomes server-managed; remove that entry to use Client Settings again. Do not
+replace the existing worker entries or tokens. `docker compose down` preserves
+SQLite and credentials; **`down -v` deletes the named volumes**.
+
+### 3. Enable optional receivers
+
+The default stack starts the gateway, discovery, relay and YouTube catalog. Enable
+only the extra services you intend to use:
+
+```sh
+docker compose --profile youtube-receiver up -d
+docker compose --profile spotify up -d
+docker compose --profile airplay up -d
+docker compose --profile rebrowser up -d
+docker compose ps --all
+```
+
+Spotify Connect authorization is initiated in Client **Services** and completed
+on another device using its displayed URL/code; it is not a token typed into the
+APK. AirPlay advertises a receiver and uses a private PIN stored in its worker
+volume. YouTube TV Code/DIAL controls the TV receiver; it is separate from a
+YouTube account sign-in. A packaged process being up does not prove an account is
+ready or that a physical sender/player works.
+
+The published dev.52 images are frozen. New Go/Client changes in this checkout
+are **not** present in that release until a later release rebuilds/publishes them.
 
 For an offline installation, use the separate image archive and Compose bundle:
 
@@ -40,7 +138,7 @@ For an offline installation, use the separate image archive and Compose bundle:
 docker image load -i images.tar
 docker compose up -d
 docker compose ps --all
-docker compose logs gateway  # local operator pairing code; keep it private
+docker compose exec gateway cat /config/operator.code  # keep it private
 ```
 
 Default services are gateway, discovery, MediaMTX and YouTube, plus the completed

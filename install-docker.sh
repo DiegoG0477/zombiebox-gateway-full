@@ -73,4 +73,4 @@ fi
 
 printf 'Starting ZombieBox Full %s from %s\n' "$VERSION" "$TARGET"
 (cd "$TARGET" && docker compose pull && docker compose up -d)
-printf 'Gateway operator code: docker compose -f %s/compose.yaml logs gateway\n' "$TARGET"
+printf 'Read the private operator code: docker compose -f "%s/compose.yaml" exec gateway cat /config/operator.code\n' "$TARGET"
