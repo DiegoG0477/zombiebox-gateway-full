@@ -1,5 +1,13 @@
 # zombiebox-gateway-full: component work
 
+## dev.67 operator-code location clarification
+
+The first external-style dev.52 installation succeeded, but the operator tried
+to read `/config/operator.code` from the host. The installer and README now
+state explicitly that this path is inside the gateway container and show the
+exact `docker compose exec` command. The public image set and account/device
+acceptance gates are unchanged.
+
 ## dev.66 visible Compose installation
 
 The public installer now stores the verified Compose bundle directly in the

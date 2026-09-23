@@ -3,6 +3,7 @@
   "repository": "zombiebox-gateway-full",
   "productRegistry": "workspace:docs/milestones.json",
   "notes": [
+    "Dev.67: First external-style dev.52 installation exposed confusion about the operator-code path. Installer/README now identify it as a container path and give the exact Compose exec command. No image, account behavior or product milestone changes.",
     "Dev.66: Public installer writes the verified Compose bundle to the invoking directory by default, with an explicit --user-data option for the previous hidden path. No released image, account behavior, device evidence or product milestone changes.",
     "Dev.65: README distinguishes a temporary manual Plex server token from the missing durable account-link/shared-server flow. No binary, account test, physical gate or product milestone is completed.",
     "Dev.64: Full README gives credential sources, public/private operator-code persistence and exact dev63 offline-bundle steps. The main installer selects an installable release channel, currently published dev.52; explicit versions retain frozen identities. Host checks pass; no new binary, deployment or physical gate closes.",

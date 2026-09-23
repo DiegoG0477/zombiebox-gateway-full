@@ -94,7 +94,9 @@ If a later install channel selects a different release, use a new directory for
 that release; the installer will not replace an earlier pinned bundle in place.
 
 The `docker compose exec` command reads the private six-digit operator code
-directly. It lives in the persistent `gateway` named volume at
+from inside the gateway container. Running `cat /config/operator.code` directly
+in the host terminal will fail because that path is not on the host. The code
+lives in the persistent `gateway` named volume at
 `/config/operator.code`; a normal container restart or `docker compose down`
 followed by `up -d` keeps it. Only deleting the data volume (`down -v`)
 discards it. This is ZombieBox's local pairing/admin code, not a provider API

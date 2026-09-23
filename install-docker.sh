@@ -107,4 +107,4 @@ fi
 
 printf 'Starting ZombieBox Full %s from %s\n' "$VERSION" "$TARGET"
 (cd "$TARGET" && docker compose pull && docker compose up -d)
-printf 'Compose files: %s\nFrom that directory, read the private operator code with: docker compose exec gateway cat /config/operator.code\n' "$TARGET"
+printf 'Compose files: %s\nThe private operator code is inside the gateway container, not on the host.\nFrom that directory, run: docker compose exec gateway cat /config/operator.code\n' "$TARGET"
