@@ -176,3 +176,11 @@ all nine images. The version-pinned installer fetched and verified the release a
 its pull/up sequence passed with Docker simulated; active dev.22 services were not
 replaced. The root and Full READMEs now make that one-line command the default.
 Product milestones, physical devices and real provider accounts remain unverified.
+
+## dev.49 — shared Core pin alignment
+
+Full's development checkout consumes Core dev.45, matching the Edge and workspace
+pins. This only admits the Node24-compatible wrapper contract for future builds.
+The published dev.46 images, source archives, manifest digests and one-line
+installer remain immutable at their original Core commit. No image was rebuilt or
+running service replaced. Product and physical gates remain open.
