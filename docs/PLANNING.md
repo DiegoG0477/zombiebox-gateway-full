@@ -195,3 +195,14 @@ flag that image for review; default Compose does not start Spotify. Replace the
 binding with a reviewed distributable decoder or obtain an explicit upstream
 license before a new Spotify image is shipped. All product/physical gates remain
 open and active dev.22 services are unchanged.
+
+## dev.52 — licensed Spotify source-revision packaging
+
+Full consumes Core dev.47 and stages the reviewed MIT Ogg/Vorbis Spotify patch
+from an exact clean upstream checkout. A source-revision packager validates the
+new image inventory against the public dev.46 source base: unchanged services
+retain their immutable image/source identities, while Spotify receives a new
+image inventory, patched source, Core and Full source snapshots, and every linked
+Go module archive. The old dev.46 release remains frozen and its Spotify license
+gate remains disclosed. The new public release, anonymous pull and device/account
+behavior require separate evidence. Active dev.22 services are unchanged.

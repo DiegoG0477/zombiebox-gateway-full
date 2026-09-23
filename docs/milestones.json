@@ -40,7 +40,8 @@
     "Dev.47: dev.46 complete corresponding sources and nine GHCR image digests uploaded; OCI identity publisher verified. Packages are private at this checkpoint, so anonymous pull and installer assets remain gated. Test-only Core dev.44 pin consumed; no active deployment or physical acceptance.",
     "Dev.48: dev.46 source-complete images are publicly pullable by anonymous GHCR clients; seven verified Compose assets and the one-line installer are published. Running dev.22 services were not replaced; physical/account gates remain open.",
     "Dev.49: aligns the development Core pin to dev.45 Node24 worker compatibility. The published Full dev.46 images/sources remain frozen at Core e09ad25; no rebuild, deployment, account or device result is claimed.",
-    "Dev.51: consumes Core dev.46 authenticated DASH audio test coverage and records the unresolved optional Spotify xlab/vorbis-go license gate. The dev.46 image set remains immutable; no deployment or product/physical acceptance is claimed."
+    "Dev.51: consumes Core dev.46 authenticated DASH audio test coverage and records the unresolved optional Spotify xlab/vorbis-go license gate. The dev.46 image set remains immutable; no deployment or product/physical acceptance is claimed.",
+    "Dev.52: pins Core dev.47 and stages licensed Spotify source from an exact upstream commit. The source-revision packager retains dev.46 image/source identities for unchanged services. New Spotify GHCR publication and physical acceptance remain open."
   ],
   "milestones": [
     {
@@ -92,6 +93,6 @@
       "remoteURL": "https://github.com/ZombieBox-tv/zombiebox-gateway-full/milestone/6"
     }
   ],
-  "developmentCheckpoint": "v0.1.0-dev.51",
+  "developmentCheckpoint": "v0.1.0-dev.52",
   "remote": "https://github.com/ZombieBox-tv/zombiebox-gateway-full"
 }

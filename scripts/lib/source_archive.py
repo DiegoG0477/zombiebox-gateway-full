@@ -2,6 +2,7 @@
 
 import json
 import os
+import shutil
 import subprocess
 import tarfile
 import tempfile
@@ -21,6 +22,25 @@ def prepare_sources(root, names):
         if actual != entry["commit"]:
             raise ValueError(f"Restore pinned {entry['name']} with make references")
         destination = root / ".local/build-sources" / entry["name"]
+        if entry["name"] == "go-librespot":
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            with tempfile.TemporaryDirectory(dir=destination.parent) as temporary:
+                staged = Path(temporary) / "go-librespot"
+                subprocess.run(
+                    [
+                        "python3",
+                        str(core / "scripts/prepare-spotify-source.py"),
+                        "--source",
+                        str(source),
+                        "--output",
+                        str(staged),
+                    ],
+                    check=True,
+                )
+                if destination.exists():
+                    shutil.rmtree(destination)
+                staged.replace(destination)
+            continue
         destination.mkdir(parents=True, exist_ok=True)
         with tempfile.TemporaryFile() as archive:
             subprocess.run(
