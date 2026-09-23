@@ -84,14 +84,18 @@ jobs:
         run: |
           set -euo pipefail
           image="ghcr.io/zombiebox-tv/spotify:$RELEASE_VERSION"
-          if docker manifest inspect "$image" >/dev/null 2>&1; then
-            echo "Refusing to move existing image tag: $image" >&2
-            exit 1
-          fi
           printf '%s' "$GH_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
-          docker tag zombiebox-spotify:licensed-candidate "$image"
-          docker push "$image"
-          digest=$(docker buildx imagetools inspect --format '{{.Digest}}' "$image")
+          if docker manifest inspect "$image" > dist/spotify-publication/remote-manifest.json 2>/dev/null; then
+            remote_config=$(python3 -c 'import json;print(json.load(open("dist/spotify-publication/remote-manifest.json"))["config"]["digest"])')
+            test "$remote_config" = "$(cat dist/spotify-publication/loaded-config-id)" || {
+              echo "Refusing to move an existing tag with different image content" >&2
+              exit 1
+            }
+          else
+            docker tag zombiebox-spotify:licensed-candidate "$image"
+            docker push "$image"
+          fi
+          digest=$(docker buildx imagetools inspect "$image" | awk '$1 == "Digest:" {print $2}')
           RELEASE_DIGEST="$digest" python3 - <<'PY'
           import json
           import os
