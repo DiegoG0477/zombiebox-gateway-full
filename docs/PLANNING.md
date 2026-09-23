@@ -239,6 +239,15 @@ Dev.56: Pins Core dev.50 IPTV category contract and host tests. Published Full d
 
 Dev.57: Pins Core dev.51 YouTube account OAuth and Spotify receiver lifecycle host coverage; adds optional OAuth environment to source Compose and README. Published Full dev.52 images remain frozen; real accounts and devices are unverified.
 
+## v0.1.0-dev.62 — current gateway source closure
+
+A source-revision builder can stage the current gateway image's corresponding
+Core/Full sources while inheriting unchanged reviewed Full service sources from
+the public dev.46/dev.52 chain. It checks the exact local image, linked Go
+module ZIP/mod hashes, Go standard-library source and Alpine recipe commits.
+This prepares a reviewable source delta; GitHub/GHCR upload and physical
+acceptance remain separate.
+
 ## v0.1.0-dev.61 — bounded probe reuse in private packaging
 
 The private offline bundle builder can reuse its locally cached UHD diagnostic
