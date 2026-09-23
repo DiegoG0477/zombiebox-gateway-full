@@ -1,5 +1,12 @@
 # zombiebox-gateway-full: component work
 
+## dev.65 Plex shared-library setup clarification
+
+The README now identifies the manual one-server URL/token connector as a
+temporary test path. Linking a Plex account, discovering servers shared with
+that account and maintaining server-specific access remain M4 work in the
+shared core; no new Full binary or account behavior is claimed.
+
 ## dev.64 onboarding and installable release channel
 
 The public one-line installer follows `install-channel.txt`, which stays at

@@ -115,7 +115,7 @@ accounts later.
 | Service | Credential or address, and where it comes from |
 | --- | --- |
 | IPTV | Your provider's HTTP(S) M3U playlist URL, plus an optional XMLTV guide URL. A public playlist needs no account token; direct M3U needs no Threadfin. |
-| Plex | Your Plex server URL and an `X-Plex-Token` from [Plex's token guide](https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/). Its simple retrieval method can yield a temporary token. |
+| Plex | **Current manual connector:** one reachable Plex Media Server URL and an `X-Plex-Token` authorized for that server. [Plex's XML/token guide](https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/) describes a temporary token suitable for a short test, not a durable account-linking setup. |
 | Jellyfin | Your server URL, an API key from its **Admin Dashboard → API Keys**, and the intended user's ID from **Admin Dashboard → Users**. The gateway requires all three; see [Jellyfin user administration](https://jellyfin.org/docs/general/server/users/adding-managing-users/). ZombieBox does not issue these. |
 | Stremio | An add-on endpoint/catalog you choose, normally its [`manifest.json` URL](https://stremio.github.io/stremio-addon-guide/step1). There is no universal Stremio key; a private add-on URL may itself carry a secret. |
 | YouTube catalog / TV Code | No personal API key for anonymous browsing or receiver pairing. Full creates the internal worker tokens automatically. TV Code is separate from Google account authorization. |
@@ -128,6 +128,15 @@ pairing. The gateway saves them in private SQLite, never in the APK. Only use
 the server file below if you want that provider managed centrally; its entry
 overrides the Client form. Backups of the gateway database and volumes contain
 secrets.
+
+**Plex shared libraries:** If another person shares remote servers with your
+Plex account, the current gateway does not sign in to that account, discover its
+available servers or refresh their server-specific tokens. The URL/token form
+can reach one shared server only if you already have a valid connection URL and
+token for it; it does not accept your Plex username/password. A durable flow
+requires Plex account linking, server discovery and token renewal on the gateway.
+This remains an M4 integration gap; do not assume that entering a token copied
+from Plex Web will keep remote libraries connected indefinitely.
 
 The initialization container creates `/config/providers.json` in the private
 `gateway` volume. Its entries for the packaged YouTube, Spotify, AirPlay and
