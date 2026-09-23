@@ -1,0 +1,106 @@
+name: Publish licensed Spotify image revision
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Existing source-complete Full prerelease version
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    concurrency:
+      group: full-spotify-${{ inputs.version }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Download exact image and corresponding source revision
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ inputs.version }}
+        run: |
+          mkdir -p dist/spotify-publication
+          gh release download "$RELEASE_VERSION" -R "$GITHUB_REPOSITORY" \
+            -p spotify-image.tar -p spotify-image.sha256 \
+            -p spotify.json -p sources-index.json -p sources-SHA256SUMS \
+            -p "full-sources-$RELEASE_VERSION-spotify-revision.tar" \
+            -D dist/spotify-publication
+      - name: Verify source closure and image identity
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+        run: |
+          cd dist/spotify-publication
+          sha256sum --check spotify-image.sha256
+          sha256sum --check sources-SHA256SUMS
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import os
+          import pathlib
+          import tarfile
+
+          root = pathlib.Path('.')
+          index = json.loads((root / 'sources-index.json').read_text())
+          inventory = json.loads((root / 'spotify.json').read_text())
+          version = os.environ['RELEASE_VERSION']
+          assert index['schemaVersion'] == 2 and index['version'] == version
+          assert index['completeCorrespondingSources']
+          assert index['imageIds']['spotify'] == inventory['imageId']
+          assert index['baseSourceIndexUrl'].endswith('/v0.1.0-dev.46/sources-index.json')
+          assert len(index['parts']) == 4
+          part = root / f'full-sources-{version}-spotify-revision.tar'
+          assert index['parts'][-1]['sha256'] == hashlib.sha256(part.read_bytes()).hexdigest()
+          with tarfile.open(part) as archive:
+              names = set(archive.getnames())
+              assert {'inventory/spotify.json', 'source/gateway-core.tar',
+                      'source/gateway-full.tar', 'source/go-librespot/go.mod'} <= names
+              assert any(name.startswith('go/github.com_jfreymuth_oggvorbis@') for name in names)
+              assert any(name.startswith('go/github.com_jfreymuth_vorbis@') for name in names)
+          for binary in inventory['goBinaries']:
+              assert not any(item['path'] == 'github.com/xlab/vorbis-go'
+                             for item in binary['dependencies'])
+          PY
+          docker load -i spotify-image.tar
+          test "$(docker image inspect zombiebox-spotify:licensed-candidate --format '{{.Id}}')" = \
+            "$(python3 -c 'import json;print(json.load(open("spotify.json"))["imageId"])')"
+      - name: Push immutable tag and record manifest digest
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          image="ghcr.io/zombiebox-tv/spotify:$RELEASE_VERSION"
+          if docker manifest inspect "$image" >/dev/null 2>&1; then
+            echo "Refusing to move existing image tag: $image" >&2
+            exit 1
+          fi
+          printf '%s' "$GH_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          docker tag zombiebox-spotify:licensed-candidate "$image"
+          docker push "$image"
+          digest=$(docker buildx imagetools inspect --format '{{.Digest}}' "$image")
+          RELEASE_DIGEST="$digest" python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          image_id = json.loads(Path('dist/spotify-publication/spotify.json').read_text())['imageId']
+          digest = os.environ['RELEASE_DIGEST']
+          assert digest.startswith('sha256:') and len(digest) == 71
+          receipt = dict(
+              imageId=image_id,
+              tag=f'ghcr.io/zombiebox-tv/spotify:{os.environ["RELEASE_VERSION"]}',
+              digestRef=f'ghcr.io/zombiebox-tv/spotify@{digest}',
+          )
+          Path('dist/spotify-publication/spotify-push-receipt.json').write_text(
+              json.dumps(receipt, indent=2) + '\n'
+          )
+          PY
+          gh release upload "$RELEASE_VERSION" \
+            dist/spotify-publication/spotify-push-receipt.json -R "$GITHUB_REPOSITORY"
