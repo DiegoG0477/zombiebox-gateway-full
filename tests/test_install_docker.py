@@ -40,6 +40,8 @@ class DockerInstallerTests(unittest.TestCase):
         self.calls = self.path / "docker-calls"
         self.channel = self.path / "channel.txt"
         self.channel.write_text(VERSION + "\n")
+        self.install_dir = self.path / "installed"
+        self.install_dir.mkdir()
 
     def checksums(self):
         (self.assets / "SHA256SUMS").write_text(
@@ -52,21 +54,18 @@ class DockerInstallerTests(unittest.TestCase):
             )
         )
 
-    def install(self):
+    def install(self, *arguments):
         return subprocess.run(
-            [
-                "sh",
-                str(ROOT / "install-docker.sh"),
-                "--directory",
-                str(self.path / "installed"),
-            ],
+            ["sh", str(ROOT / "install-docker.sh"), *arguments],
             text=True,
             capture_output=True,
+            cwd=self.install_dir,
             env={
                 **os.environ,
                 "PATH": str(self.bin) + os.pathsep + os.environ["PATH"],
                 "ZOMBIE_RELEASE_BASE_URL": self.assets.as_uri(),
                 "ZOMBIE_INSTALL_CHANNEL_URL": self.channel.as_uri(),
+                "XDG_DATA_HOME": str(self.path / "user-data"),
                 "DOCKER_CALLS": str(self.calls),
             },
         )
@@ -74,7 +73,8 @@ class DockerInstallerTests(unittest.TestCase):
     def test_installs_once_and_reuses_verified_release(self):
         first = self.install()
         self.assertEqual(first.returncode, 0, first.stderr)
-        self.assertTrue((self.path / "installed" / VERSION / "compose.yaml").exists())
+        self.assertTrue((self.install_dir / "compose.yaml").exists())
+        self.assertFalse((self.install_dir / VERSION).exists())
         second = self.install()
         self.assertEqual(second.returncode, 0, second.stderr)
         self.assertEqual(
@@ -87,7 +87,7 @@ class DockerInstallerTests(unittest.TestCase):
         result = self.install()
         self.assertNotEqual(result.returncode, 0)
         self.assertEqual(self.calls.read_text().splitlines(), ["compose version"])
-        self.assertFalse((self.path / "installed" / VERSION).exists())
+        self.assertFalse((self.install_dir / "compose.yaml").exists())
 
     def test_rejects_unpublished_manifest(self):
         (self.assets / "release.lock.json").write_text(
@@ -107,26 +107,37 @@ class DockerInstallerTests(unittest.TestCase):
 
     def test_explicit_version_does_not_need_channel(self):
         self.channel.unlink()
-        result = subprocess.run(
-            [
-                "sh",
-                str(ROOT / "install-docker.sh"),
-                "--version",
-                VERSION,
-                "--directory",
-                str(self.path / "installed"),
-            ],
-            text=True,
-            capture_output=True,
-            env={
-                **os.environ,
-                "PATH": str(self.bin) + os.pathsep + os.environ["PATH"],
-                "ZOMBIE_RELEASE_BASE_URL": self.assets.as_uri(),
-                "ZOMBIE_INSTALL_CHANNEL_URL": self.channel.as_uri(),
-                "DOCKER_CALLS": str(self.calls),
-            },
-        )
+        result = self.install("--version", VERSION)
         self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_existing_files_are_never_overwritten(self):
+        existing = self.install_dir / "README.md"
+        existing.write_text("my project notes\n")
+        result = self.install()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Installation file already exists", result.stderr)
+        self.assertEqual(existing.read_text(), "my project notes\n")
+        self.assertFalse((self.install_dir / "compose.yaml").exists())
+        self.assertEqual(self.calls.read_text().splitlines(), ["compose version"])
+
+    def test_hidden_user_data_is_opt_in(self):
+        result = self.install("--user-data")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        target = self.path / "user-data" / "zombiebox" / "full" / "releases" / VERSION
+        self.assertTrue((target / "compose.yaml").exists())
+        self.assertFalse((self.install_dir / "compose.yaml").exists())
+
+    def test_explicit_directory_is_not_nested_by_version(self):
+        target = self.path / "chosen"
+        result = self.install("--directory", str(target))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertTrue((target / "compose.yaml").exists())
+        self.assertFalse((target / VERSION).exists())
+
+    def test_destination_options_are_mutually_exclusive(self):
+        result = self.install("--directory", str(self.install_dir), "--user-data")
+        self.assertEqual(result.returncode, 2)
+        self.assertFalse(self.calls.exists())
 
 
 if __name__ == "__main__":

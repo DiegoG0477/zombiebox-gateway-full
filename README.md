@@ -57,6 +57,9 @@ Compose profiles; their account readiness is independent of process startup.
 
 Install the current **published, installable** Full release with one command:
 
+Run this in a new or otherwise empty directory where you want to keep
+`compose.yaml`. For example, `mkdir zombiebox-full && cd zombiebox-full` first.
+
 ```sh
 curl -fsSL https://raw.githubusercontent.com/ZombieBox-tv/zombiebox-gateway-full/main/install-docker.sh | sh
 ```
@@ -66,36 +69,55 @@ pointer only after a release has complete public Docker assets. It currently
 selects dev.52, the newest published Full package, rather than the newest
 source-only checkpoint. Each installation verifies the release's checksums,
 publication gate, version and pinned image digests. For a deliberate rollback,
-pass `--version v0.1.0-dev.52` to the command above. Do not substitute a source
-tag into the raw GitHub URL: dev.54 returns 404 because no installer was published
-for that tag.
+run the same URL with `| sh -s -- --version v0.1.0-dev.52`. Do not substitute a
+source tag into the raw GitHub URL: dev.54 returns 404 because no installer was
+published for that tag.
 
 The installer downloads the release's checksummed `compose.yaml`, static
 `seccomp.json`, license, notices and lock; then runs `docker compose pull` and
 `docker compose up -d`. Its nine GHCR images use immutable digests verified through
 anonymous registry requests. Eight retain their dev.46 identities; Spotify uses a
 new licensed dev.52 image. The release source index pins the unchanged dev.46
-source archives and includes a new Spotify archive with every linked Go module. The bundle stays
-under `${XDG_DATA_HOME:-$HOME/.local/share}/zombiebox/full/releases/v0.1.0-dev.52`.
-The command prints the installation directory. Docker Engine and Compose v2 are
-the only host runtime requirements; no host Go, Python, Node or FFmpeg is needed.
-Keep the downloaded directory: its `compose.yaml` records the exact image digests.
-From here on, run the commands below **inside that directory**:
+source archives and includes a new Spotify archive with every linked Go module.
+By default, all checked release files, including `compose.yaml`, remain directly
+in the directory where you ran the command. The installer refuses to overwrite
+files already there. Docker Engine and Compose v2 are the only host runtime
+requirements; no host Go, Python, Node or FFmpeg is needed. Keep these files:
+`compose.yaml` records the exact image digests. From the same directory, run:
 
 ```sh
-cd "${XDG_DATA_HOME:-$HOME/.local/share}/zombiebox/full/releases/v0.1.0-dev.52"
 docker compose ps --all
 docker compose exec gateway cat /config/operator.code
 ```
 
-The last command reads the private six-digit operator code directly. It lives in
-the persistent `gateway` named volume at `/config/operator.code`; a normal
-container restart or `docker compose down` followed by `up -d` keeps it. Only
-deleting the data volume (`down -v`) discards it. This is ZombieBox's local
-pairing/admin code, not a provider API key or a temporary Google/Spotify code.
-The dev.52 gateway also prints that code at startup, so the installer's `logs gateway` hint
-works, but includes unrelated log output. Do not post the code, gateway startup
-logs or `providers.json` in issues.
+If a later install channel selects a different release, use a new directory for
+that release; the installer will not replace an earlier pinned bundle in place.
+
+The `docker compose exec` command reads the private six-digit operator code
+directly. It lives in the persistent `gateway` named volume at
+`/config/operator.code`; a normal container restart or `docker compose down`
+followed by `up -d` keeps it. Only deleting the data volume (`down -v`)
+discards it. This is ZombieBox's local pairing/admin code, not a provider API
+key or a temporary Google/Spotify code. The dev.52 gateway also prints that
+code at startup, so the installer's `logs gateway` hint works, but includes
+unrelated log output. Do not post the code, gateway startup logs or
+`providers.json` in issues.
+
+To install elsewhere, pass a directory explicitly:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/ZombieBox-tv/zombiebox-gateway-full/main/install-docker.sh | sh -s -- --directory ./zombiebox-full
+```
+
+If you prefer the previous hidden location, pass `--user-data` instead. That
+selects `${XDG_DATA_HOME:-$HOME/.local/share}/zombiebox/full/releases/<version>`;
+the installer prints the resolved path. Existing hidden installations are not
+moved or deleted by the new default. Docker named volumes hold the gateway's
+private configuration separately from the downloaded Compose files.
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/ZombieBox-tv/zombiebox-gateway-full/main/install-docker.sh | sh -s -- --user-data
+```
 
 ### 2. Connect and add your credentials
 

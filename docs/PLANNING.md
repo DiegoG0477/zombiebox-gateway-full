@@ -1,5 +1,14 @@
 # zombiebox-gateway-full: component work
 
+## dev.66 visible Compose installation
+
+The public installer now stores the verified Compose bundle directly in the
+invoking directory by default, so users can run `docker compose` there.
+`--directory` selects another visible directory and `--user-data` retains the
+former versioned XDG location. Existing files are never overwritten. These
+installer changes do not republish or replace the frozen dev.52 images, move
+private Docker volumes or complete an account/device milestone.
+
 ## dev.65 Plex shared-library setup clarification
 
 The README now identifies the manual one-server URL/token connector as a

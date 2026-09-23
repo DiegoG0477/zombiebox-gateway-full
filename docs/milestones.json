@@ -3,6 +3,7 @@
   "repository": "zombiebox-gateway-full",
   "productRegistry": "workspace:docs/milestones.json",
   "notes": [
+    "Dev.66: Public installer writes the verified Compose bundle to the invoking directory by default, with an explicit --user-data option for the previous hidden path. No released image, account behavior, device evidence or product milestone changes.",
     "Dev.65: README distinguishes a temporary manual Plex server token from the missing durable account-link/shared-server flow. No binary, account test, physical gate or product milestone is completed.",
     "Dev.64: Full README gives credential sources, public/private operator-code persistence and exact dev63 offline-bundle steps. The main installer selects an installable release channel, currently published dev.52; explicit versions retain frozen identities. Host checks pass; no new binary, deployment or physical gate closes.",
     "Dev.63: Source/private Full Compose pins the reviewed licensed Spotify image by public SHA256 digest instead of selecting the old local image; source installation no longer rebuilds Spotify. A new private bundle must be regenerated. Physical/public gates remain open.",
