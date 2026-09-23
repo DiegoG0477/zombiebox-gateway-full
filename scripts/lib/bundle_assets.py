@@ -20,13 +20,22 @@ def copy_assets(root, core, output):
         target = output / "assets" / filename
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(core / filename, target)
+    # A small host may need longer than the generator's bound for UHD samples.
+    # The generator below validates every reused file and replaces invalid ones.
+    cached = root / ".local/gateway/probes"
+    probes = output / "assets/probes"
+    probes.mkdir(parents=True, exist_ok=True)
+    for name in ("high-2160.mp4", "hevc-1080.mp4", "hevc-2160.mp4"):
+        source = cached / name
+        if source.is_file() and not source.is_symlink():
+            shutil.copy2(source, probes / name)
     for generator in ("generate-probes.py", "generate-extended-probes.py"):
         subprocess.run(
             [
                 "python3",
                 str(core / "scripts" / generator),
                 "--output",
-                str(output / "assets/probes"),
+                str(probes),
             ],
             check=True,
         )

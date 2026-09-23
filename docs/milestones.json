@@ -3,6 +3,7 @@
   "repository": "zombiebox-gateway-full",
   "productRegistry": "workspace:docs/milestones.json",
   "notes": [
+    "Dev.61: Private Full bundle construction reuses bounded cached UHD probe assets only after the Core generator validates them, so an 8 GB development host can package without re-encoding 4K on each build. Public/physical gates remain open.",
     "Dev.60: Source/offline setup persists a private six-digit operator code and fails closed on mismatch; installer instructions distinguish the public initializer from the private Compose graph. Current local image and offline bundle are rebuilt separately; no public release or device gate closes.",
     "Dev.59: Pins Core dev.53 bounded YouTube access-token recovery and isolates a new local gateway image identity. Public dev.52 images and active dev.22 remain unchanged; real account/device acceptance is open.",
     "Dev.58: Pins Core dev.52 golden fixtures; local dev.58 gateway image builds and isolated packaged tracks/HLS/DASH/live media smokes pass. Public dev.52 digests and active dev.22 remain unchanged; RTSP/account/device acceptance stays open.",

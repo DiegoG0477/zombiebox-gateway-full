@@ -239,6 +239,14 @@ Dev.56: Pins Core dev.50 IPTV category contract and host tests. Published Full d
 
 Dev.57: Pins Core dev.51 YouTube account OAuth and Spotify receiver lifecycle host coverage; adds optional OAuth environment to source Compose and README. Published Full dev.52 images remain frozen; real accounts and devices are unverified.
 
+## v0.1.0-dev.61 — bounded probe reuse in private packaging
+
+The private offline bundle builder can reuse its locally cached UHD diagnostic
+samples. Core validates codec, profile, level, SDR metadata, size and duration
+before accepting them, and regenerates invalid samples. This avoids repeated 4K
+encoding on the constrained development host while preserving artifact hashes
+and the separate physical decoder gate.
+
 ## v0.1.0-dev.60 — persistent private operator code
 
 Source and offline Full setup now creates one private six-digit operator code,
