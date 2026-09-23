@@ -66,10 +66,17 @@ jobs:
           for binary in inventory['goBinaries']:
               assert not any(item['path'] == 'github.com/xlab/vorbis-go'
                              for item in binary['dependencies'])
+          with tarfile.open('spotify-image.tar') as archive:
+              oci = json.load(archive.extractfile('index.json'))
+              assert [item['digest'] for item in oci['manifests']] == [inventory['imageId']]
+              manifest = json.load(archive.extractfile('manifest.json'))
+              assert len(manifest) == 1
+              config_id = 'sha256:' + pathlib.Path(manifest[0]['Config']).name
+          (root / 'loaded-config-id').write_text(config_id)
           PY
           docker load -i spotify-image.tar
           test "$(docker image inspect zombiebox-spotify:licensed-candidate --format '{{.Id}}')" = \
-            "$(python3 -c 'import json;print(json.load(open("spotify.json"))["imageId"])')"
+            "$(cat loaded-config-id)"
       - name: Push immutable tag and record manifest digest
         env:
           GH_TOKEN: ${{ github.token }}
