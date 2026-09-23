@@ -239,6 +239,14 @@ Dev.56: Pins Core dev.50 IPTV category contract and host tests. Published Full d
 
 Dev.57: Pins Core dev.51 YouTube account OAuth and Spotify receiver lifecycle host coverage; adds optional OAuth environment to source Compose and README. Published Full dev.52 images remain frozen; real accounts and devices are unverified.
 
+## v0.1.0-dev.60 — persistent private operator code
+
+Source and offline Full setup now creates one private six-digit operator code,
+preserves it across reruns and rejects a conflicting Compose environment. The
+README distinguishes public initializer credentials from the private bundle's
+`full-test` runtime and optional worker profiles. No public release or physical
+gateway/TV acceptance follows from the host tests.
+
 ## v0.1.0-dev.59 — account recovery core pin
 
 Dev.59 pins Core dev.53 and assigns a new local gateway/discovery image identity

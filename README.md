@@ -129,7 +129,7 @@ volume. YouTube TV Code/DIAL controls the TV receiver; it is separate from a
 YouTube account sign-in. A packaged process being up does not prove an account is
 ready or that a physical sender/player works.
 
-The **current source checkout (dev.59)** also supports read-only YouTube account
+The **current source checkout (dev.60)** also supports read-only YouTube account
 browsing. This is not in the published dev.52 images. Create a Google OAuth client
 of type **TVs and Limited Input devices** in a Google Cloud project with the
 YouTube Data API enabled. Set its client ID, and its client secret if issued, in
@@ -155,20 +155,29 @@ must provide one.
 
 The published dev.52 images are frozen. New Go/Client changes in this checkout
 are **not** present in that release until a later release rebuilds/publishes them.
-The local source Compose image is tagged `0.1.0-dev.59` and includes the account
+The local source Compose image is tagged `0.1.0-dev.60` and includes the account
 flow; its host smoke checks do not prove real Google authorization or TV behavior.
 
-For an offline installation, use the separate image archive and Compose bundle:
+For a **private offline bundle built from this checkout**, enter its directory
+and prepare a dedicated `full-test` runtime. This generates one private,
+persistent six-digit operator code before any container starts:
 
 ```sh
-docker image load -i images.tar
-docker compose up -d
-docker compose ps --all
-docker compose exec gateway cat /config/operator.code  # keep it private
+bash install.sh --prepare-only
+cat "${XDG_DATA_HOME:-$HOME/.local/share}/zombiebox/full-test/.local/gateway/config/operator.code"
+bash install.sh --profile youtube
 ```
 
-Default services are gateway, discovery, MediaMTX and YouTube, plus the completed
-initializer. Optional receivers/browser can be added with:
+The code is also passed to the gateway through its private Compose environment.
+Do not paste it into bug reports. The offline bundle loads its own frozen image
+archive; it does not pull or compile. Host Python3 is used only by this private
+offline installer, not by the public Docker-only release installer. Source
+checkouts instead keep the same private code under the `full` runtime.
+
+The public dev.52 release starts gateway, discovery, MediaMTX and YouTube through
+its completed initializer. The private source/offline Compose graph starts
+gateway, discovery and MediaMTX; `--profile youtube` adds the catalog worker.
+Optional receivers/browser can be added with:
 
 ```sh
 docker compose --profile airplay --profile youtube-receiver --profile rebrowser up -d
