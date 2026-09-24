@@ -199,6 +199,15 @@ volume. YouTube TV Code/DIAL controls the TV receiver; it is separate from a
 YouTube account sign-in. A packaged process being up does not prove an account is
 ready or that a physical sender/player works.
 
+The default Spotify bridge has zeroconf advertising disabled: authorize it with
+the device-auth code first, then select the active Spotify receiver in Client.
+Do not expect this default bridge to appear as an ordinary Chromecast target.
+AirPlay/RAOP advertisements start only after the optional AirPlay profile runs;
+YouTube DIAL announces only while the Client has activated the receiver. If a TV
+and phone occupy different local subnets, use a gateway HTTP address reachable
+from both before generating a Cast pairing QR. Gateway health from the TV alone
+does not prove the phone can use the address encoded in that QR.
+
 The **current source checkout and private dev63 bundle** also support read-only
 YouTube account browsing. This is not in the published dev.52 images. Create a Google OAuth client
 of type **TVs and Limited Input devices** in a Google Cloud project with the
