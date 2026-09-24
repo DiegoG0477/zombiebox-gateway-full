@@ -195,7 +195,20 @@ docker compose ps --all
 Spotify Connect authorization is initiated in Client **Services** and completed
 on another device using its displayed URL/code; it is not a token typed into the
 APK. AirPlay advertises a receiver and uses a private PIN stored in its worker
-volume. YouTube TV Code/DIAL controls the TV receiver; it is separate from a
+volume. In Client dev.50 with an updated Full gateway/worker, open the AirPlay
+section and choose **Show AirPlay PIN**. Enter that four-digit receiver PIN on
+the iPhone or iPad; the six-digit gateway operator code is unrelated. The
+currently published dev.52 Docker image predates this Client route. Until an
+updated image is installed, an administrator can reveal only the PIN locally
+from the trusted host, in the directory containing the Compose file:
+
+```sh
+docker compose --profile airplay exec -T airplay sh -c 'sed -n '\''s/.*"pin"[[:space:]]*:[[:space:]]*"\([0-9][0-9][0-9][0-9]\)".*/\1/p'\'' /config/worker.json'
+```
+
+Keep the PIN private. If the fallback command prints nothing, check that the AirPlay
+profile is running and its worker configuration was initialized. YouTube TV
+Code/DIAL controls the TV receiver; it is separate from a
 YouTube account sign-in. A packaged process being up does not prove an account is
 ready or that a physical sender/player works.
 

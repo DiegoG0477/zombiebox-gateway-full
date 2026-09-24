@@ -1,5 +1,14 @@
 # zombiebox-gateway-full: component work
 
+## dev.70 AirPlay receiver PIN handoff
+
+The first iPad physical trial discovers AirPlay but requests a four-digit PIN.
+Full now pins Core dev.55, whose paired, no-store route supplies that worker PIN
+to Client dev.50's AirPlay section. README treats host retrieval only as a
+temporary fallback for the older published dev.52 image. The candidate images
+and iPad authentication/playback still need separate verification; no release,
+account or product gate closes.
+
 ## dev.67 operator-code location clarification
 
 The first external-style dev.52 installation succeeded, but the operator tried
