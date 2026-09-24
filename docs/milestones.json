@@ -3,6 +3,7 @@
   "repository": "zombiebox-gateway-full",
   "productRegistry": "workspace:docs/milestones.json",
   "notes": [
+    "Dev.69: First physical QA found host-network UDP discovery listening on 8098 while the selected TV's Fedora nm-shared firewall zone rejected the port. README now gives a zone-scoped, temporary operator trial. No automatic firewall mutation, new image or device acceptance is claimed.",
     "Dev.68: Pins Core dev.54 YouTube stream-resolution fix for a future image. Physical QA of public dev.52 found empty anonymous YouTube Home, a 502 playback resolution and initially stopped optional receivers. Public dev.52 images, installer channel and device acceptance remain unchanged.",
     "Dev.67: First external-style dev.52 installation exposed confusion about the operator-code path. Installer/README now identify it as a container path and give the exact Compose exec command. No image, account behavior or product milestone changes.",
     "Dev.66: Public installer writes the verified Compose bundle to the invoking directory by default, with an explicit --user-data option for the previous hidden path. No released image, account behavior, device evidence or product milestone changes.",
@@ -109,6 +110,6 @@
       "remoteURL": "https://github.com/ZombieBox-tv/zombiebox-gateway-full/milestone/6"
     }
   ],
-  "developmentCheckpoint": "v0.1.0-dev.68",
+  "developmentCheckpoint": "v0.1.0-dev.69",
   "remote": "https://github.com/ZombieBox-tv/zombiebox-gateway-full"
 }

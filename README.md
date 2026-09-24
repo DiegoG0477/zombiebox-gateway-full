@@ -208,6 +208,16 @@ and phone occupy different local subnets, use a gateway HTTP address reachable
 from both before generating a Cast pairing QR. Gateway health from the TV alone
 does not prove the phone can use the address encoded in that QR.
 
+Discovery uses UDP **8098** on the host, independent of the gateway's Docker
+published HTTP **8090**. On Fedora's shared-Ethernet `nm-shared` firewall zone,
+HTTP may work while UDP discovery is rejected. Check the zone assigned to the TV
+interface, then allow UDP 8098 only on that trusted interface. For a temporary
+`nm-shared` trial, run `sudo firewall-cmd --zone=nm-shared --add-port=8098/udp`;
+repeat with `--permanent` and reload only after verifying that this is the right
+zone for the intended TV network. Receiver discovery and media ports have their
+own firewall/network requirements; opening 8098 does not make AirPlay, Spotify
+or YouTube DIAL ready.
+
 The **current source checkout and private dev63 bundle** also support read-only
 YouTube account browsing. This is not in the published dev.52 images. Create a Google OAuth client
 of type **TVs and Limited Input devices** in a Google Cloud project with the
