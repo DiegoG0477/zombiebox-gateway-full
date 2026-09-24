@@ -1,5 +1,31 @@
 # zombiebox-gateway-full: component work
 
+## dev.71 guided provider setup, Spotify Connect and receiver workers
+
+The source-only Full Compose candidate builds a new Spotify worker from the
+locked, licensed go-librespot source. New installations default to built-in
+Zeroconf discovery on the host network; existing worker configuration and
+stored account credentials retain their previous mode. A private offline
+initializer helper selects either Zeroconf or the existing device-authorization
+code flow without deleting account state. The worker's bearer-protected API
+binds only to Docker's host-gateway address, and the gateway reports account
+authorization separately from process availability. Local host probes saw the
+Spotify mDNS service on the physical Wi-Fi interface and verified that TCP
+8092 refused connections on physical LAN addresses. The Spotify phone picker,
+account handoff and playback still require physical acceptance. No published
+dev.52 image, private QA service, release or product gate changed in this work.
+
+Full adds an offline, terminal-guided provider configuration path for IPTV,
+Plex, Jellyfin and Stremio, including a private M3U import. It validates inputs,
+hides secrets during entry, preserves unrelated configuration and atomically
+replaces the private configuration file with restrictive permissions. The
+development Compose candidate gives the YouTube catalog and receiver workers
+larger bounded memory budgets after a real YouTube resolution failure. The
+development pin consumes Core's improved anonymous YouTube browse and playback
+work; published dev.52 assets remain frozen. The first Vizio check showed a
+YouTube feed and AirPlay PIN on screen, but YouTube playback and iPad receiver
+authentication/playback are not accepted yet.
+
 ## dev.70 AirPlay receiver PIN handoff
 
 The first iPad physical trial discovers AirPlay but requests a four-digit PIN.

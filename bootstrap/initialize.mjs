@@ -80,6 +80,30 @@ function config(relative, defaults) {
   return JSON.parse(existing(relative));
 }
 
+function replacePrivate(relative, contents) {
+  const destination = path.join(root, relative);
+  const temporary = destination + "." + crypto.randomUUID() + ".tmp";
+  let fd;
+  try {
+    fd = fs.openSync(temporary, "wx", 0o600);
+    fs.writeFileSync(fd, contents);
+    fs.fchownSync(fd, uid, gid);
+    fs.fsyncSync(fd);
+    fs.closeSync(fd);
+    fd = undefined;
+    fs.renameSync(temporary, destination);
+    const directory = fs.openSync(path.dirname(destination), "r");
+    try {
+      fs.fsyncSync(directory);
+    } finally {
+      fs.closeSync(directory);
+    }
+  } finally {
+    if (fd !== undefined) fs.closeSync(fd);
+    if (fs.existsSync(temporary)) fs.unlinkSync(temporary);
+  }
+}
+
 function secret(relative, make, pattern) {
   create(relative, make() + "\n");
   const value = existing(relative).trim();
@@ -129,7 +153,7 @@ const receiver = workerConfig("youtube-receiver", "receiver.json", {
 });
 const spotify = workerConfig("spotify", "worker.json", {
   mode: "spotify",
-  listen: "0.0.0.0:8092",
+  listen: "host.docker.internal:8092",
   stateDir: "/state",
 });
 const airplay = workerConfig("airplay", "worker.json", {
@@ -142,17 +166,27 @@ const browser = workerConfig("rebrowser", "browser.json", {});
 
 // Availability and account readiness are separate. An absent optional process is
 // unavailable, never a core startup dependency. Existing operator choices win.
-config("gateway/providers.json", {
+const providers = config("gateway/providers.json", {
   youtube: { enabled: true, url: "http://youtube:8091", token: youtube.token },
   youtube_receiver: {
     enabled: true,
     url: "http://host.docker.internal:8095",
     token: receiver.token,
   },
-  spotify: { enabled: true, url: "http://spotify:8092", token: spotify.token },
+  spotify: {
+    enabled: true,
+    url: "http://host.docker.internal:8092",
+    token: spotify.token,
+  },
   airplay: { enabled: true, url: "http://host.docker.internal:8093", token: airplay.token },
   rebrowser: { enabled: true, url: "http://rebrowser:8094", token: browser.token },
 });
+// Upgrade only the former packaged address. Keep custom workers, tokens and
+// account state untouched; the host-network listener is reachable via Docker.
+if (providers.spotify?.url === "http://spotify:8092" && providers.spotify.token === spotify.token) {
+  providers.spotify.url = "http://host.docker.internal:8092";
+  replacePrivate("gateway/providers.json", JSON.stringify(providers, null, 2) + "\n");
+}
 create("spotify-state/config.yml", fs.readFileSync(path.join(assets, "spotify.yml")));
 asset("gateway/launch.sh", fs.readFileSync(path.join(assets, "launch-gateway.sh")), 0o700);
 create(

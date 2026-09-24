@@ -46,6 +46,13 @@ class StandaloneComposeTests(unittest.TestCase):
             result["services"]["gateway"]["entrypoint"],
             ["/bin/sh", "/config/launch.sh"],
         )
+        spotify = result["services"]["spotify"]
+        self.assertEqual(spotify["network_mode"], "host")
+        self.assertEqual(
+            spotify["environment"]["ZOMBIE_SPOTIFY_API_BIND"],
+            "host.docker.internal:8092",
+        )
+        self.assertNotIn("ports", spotify)
         rendered = subprocess.run(
             [
                 "docker",
@@ -105,6 +112,12 @@ class InitializationTests(unittest.TestCase):
         providers = json.loads((gateway / "providers.json").read_text())
         yt = json.loads((self.seed / "youtube/youtube.json").read_text())
         self.assertEqual(providers["youtube"]["token"], yt["token"])
+        self.assertEqual(
+            providers["spotify"]["url"], "http://host.docker.internal:8092"
+        )
+        self.assertIn(
+            "type: zeroconf", (self.seed / "spotify-state/config.yml").read_text()
+        )
         providers["iptv"] = {"enabled": True, "url": "https://example.org/my.m3u"}
         (gateway / "providers.json").write_text(json.dumps(providers))
         before = {
@@ -121,6 +134,27 @@ class InitializationTests(unittest.TestCase):
         }
         self.assertEqual(before, after)
         self.assertEqual((gateway / "relay.key").stat().st_mode & 0o777, 0o600)
+
+    def test_legacy_spotify_address_migrates_without_touching_account_state(self):
+        self.assertEqual(self.initialize().returncode, 0)
+        provider_file = self.seed / "gateway/providers.json"
+        providers = json.loads(provider_file.read_text())
+        providers["spotify"]["url"] = "http://spotify:8092"
+        provider_file.write_text(json.dumps(providers))
+        daemon = self.seed / "spotify-state/config.yml"
+        daemon.write_text(
+            "credentials:\n  type: device_auth\nzeroconf_enabled: false\n"
+        )
+        account = self.seed / "spotify-state/state.json"
+        account.write_text('{"credentials":{"data":"private-test-value"}}')
+        self.assertEqual(self.initialize().returncode, 0)
+        migrated = json.loads(provider_file.read_text())
+        self.assertEqual(migrated["spotify"]["url"], "http://host.docker.internal:8092")
+        self.assertEqual(migrated["spotify"]["token"], providers["spotify"]["token"])
+        self.assertEqual(
+            account.read_text(), '{"credentials":{"data":"private-test-value"}}'
+        )
+        self.assertIn("type: device_auth", daemon.read_text())
 
     def test_new_image_assets_change_without_rotating_account_secrets(self):
         self.assertEqual(self.initialize().returncode, 0)

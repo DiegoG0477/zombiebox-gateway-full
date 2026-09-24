@@ -1,7 +1,7 @@
 name: zombie-box-tv
 services:
   gateway:
-    image: zombie-box-tv/gateway:0.1.0-dev.60
+    image: zombie-box-tv/gateway:0.1.0-dev.71
     build:
       context: ${ZOMBIE_CORE_DIR:-../gateway-core}
       dockerfile: ${ZOMBIE_FULL_DIR:-../gateway-full}/Dockerfile
@@ -96,7 +96,7 @@ services:
     volumes:
       - ${ZOMBIE_RUNTIME_ROOT:-.}/.local/youtube:/config:ro,Z
     expose: [8091]
-    mem_limit: 320m
+    mem_limit: 512m
     cpus: 1.0
     pids_limit: 32
     read_only: true
@@ -125,7 +125,7 @@ services:
     user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
     volumes:
       - ${ZOMBIE_RUNTIME_ROOT:-.}/.local/youtube-receiver:/config:ro,Z
-    mem_limit: 320m
+    mem_limit: 512m
     cpus: 1.0
     pids_limit: 48
     read_only: true
@@ -135,7 +135,17 @@ services:
 
   spotify:
     profiles: [spotify]
-    image: ghcr.io/zombiebox-tv/spotify@sha256:919e7995e8ae2c53c2b9ad756e15d364eccdecb3f3ab3bf6c67b19529bbde843
+    image: zombie-box-tv/spotify:0.1.0-dev.71
+    build:
+      context: ${ZOMBIE_CORE_DIR:-../gateway-core}
+      dockerfile: wrappers/spotify/Dockerfile
+      additional_contexts:
+        sources: ${ZOMBIE_RUNTIME_ROOT:-.}/.local/build-sources
+    # Spotify Connect mDNS and the pairing TCP listener must see the real LAN.
+    network_mode: host
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    environment:
+      ZOMBIE_SPOTIFY_API_BIND: host.docker.internal:8092
     user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
     volumes:
       - ${ZOMBIE_RUNTIME_ROOT:-.}/.local/spotify/worker.json:/config/worker.json:ro,Z
@@ -146,7 +156,8 @@ services:
     read_only: true
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
-    restart: "on-failure:5"
+    # Device authorization codes expire; keep offering a fresh pairing attempt.
+    restart: unless-stopped
 
   airplay:
     profiles: [airplay]

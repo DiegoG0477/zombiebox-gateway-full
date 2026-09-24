@@ -87,7 +87,7 @@ if [[ -f images.lock.json ]]; then
 elif [[ -f release.compose.json ]]; then
     "${compose[@]}" pull --quiet
 else
-    if [[ " ${profiles[*]} " =~ (airplay|threadfin) ]]; then
+    if [[ " ${profiles[*]} " =~ (spotify|airplay|threadfin) ]]; then
         python3 scripts/setup-services.py --sources
     fi
     "${compose[@]}" build

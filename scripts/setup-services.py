@@ -49,14 +49,24 @@ def prepare_media_worker(root, providers, name, port, enabled):
     (folder / "state").mkdir(parents=True, exist_ok=True, mode=0o700)
     defaults = {
         "mode": name,
-        "listen": f"0.0.0.0:{port}",
+        "listen": (
+            f"host.docker.internal:{port}" if name == "spotify" else f"0.0.0.0:{port}"
+        ),
         "token": secrets.token_hex(32),
         "stateDir": "/state",
     }
     if name == "airplay":
         defaults["pin"] = f"{secrets.randbelow(10000):04d}"
     config = ensure_config(folder / "worker.json", defaults)
-    host = "host.docker.internal" if name == "airplay" else name
+    host = "host.docker.internal" if name in {"airplay", "spotify"} else name
+    if name == "spotify":
+        current = providers.get(name)
+        if (
+            isinstance(current, dict)
+            and current.get("url") == "http://spotify:8092"
+            and current.get("token") == config["token"]
+        ):
+            current["url"] = f"http://{host}:{port}"
     configure_provider(
         providers, name, f"http://{host}:{port}", config["token"], enabled == name
     )

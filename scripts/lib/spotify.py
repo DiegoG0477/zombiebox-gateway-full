@@ -7,8 +7,12 @@ def prepare_spotify(folder):
         daemon.write_text("""device_name: Zombie Box Spotify
 device_type: speaker
 credentials:
-  type: device_auth
-zeroconf_enabled: false
+  type: zeroconf
+  zeroconf:
+    persist_credentials: true
+zeroconf_enabled: true
+zeroconf_port: 3679
+zeroconf_backend: builtin
 audio_backend: pipe
 audio_output_pipe: /state/audio.pcm
 audio_output_pipe_format: s16le

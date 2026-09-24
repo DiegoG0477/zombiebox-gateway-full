@@ -143,7 +143,7 @@ accounts later.
 | Jellyfin | Your server URL, an API key from its **Admin Dashboard → API Keys**, and the intended user's ID from **Admin Dashboard → Users**. The gateway requires all three; see [Jellyfin user administration](https://jellyfin.org/docs/general/server/users/adding-managing-users/). ZombieBox does not issue these. |
 | Stremio | An add-on endpoint/catalog you choose, normally its [`manifest.json` URL](https://stremio.github.io/stremio-addon-guide/step1). There is no universal Stremio key; a private add-on URL may itself carry a secret. |
 | YouTube catalog / TV Code | No personal API key for anonymous browsing or receiver pairing. Full creates the internal worker tokens automatically. TV Code is separate from Google account authorization. |
-| Spotify Connect | Enable its optional profile, then authorize with the URL/code shown under Client **Services** and your own Spotify account. Do not enter a Spotify password or developer key in Client settings. |
+| Spotify Connect | Enable its optional profile. The current source candidate defaults new installations to local Spotify Connect discovery: select Zombie Box from the device picker in a signed-in Spotify app on the same LAN. The device-authorization URL/code remains a selectable fallback; the published dev.52 package uses that older code flow. Do not enter a Spotify password or developer key in Client settings. |
 | AirPlay / Cast / Rebrowser | No Apple/Cast developer key. Enable the required profile; Full generates internal worker tokens and an AirPlay receiver PIN. Pair Zombie Cast through TV consent. |
 | YouTube subscriptions/playlists (private candidate only) | The operator creates a **TVs and Limited Input devices** OAuth client in [Google Cloud](https://developers.google.com/youtube/v3/guides/auth/devices) with YouTube Data API enabled, then sets its client ID and optional secret on the gateway. The viewer approves the Client's displayed URL/code. Published dev.52 does not include this feature. |
 
@@ -165,18 +165,36 @@ from Plex Web will keep remote libraries connected indefinitely.
 The initialization container creates `/config/providers.json` in the private
 `gateway` volume. Its entries for the packaged YouTube, Spotify, AirPlay and
 Rebrowser workers are **server-managed** and cannot be changed in Client Settings.
-For an advanced server-side provider entry, edit the file inside the initializer
-container, save valid JSON, then restart the gateway:
+In the source-built dev.71 candidate, configure IPTV, Plex, Jellyfin or Stremio
+from a terminal without editing JSON by running the offline initializer's guided
+command with a real terminal. The published dev.52 initializer does not contain
+this command; use Client Settings there until a new bundle is released. The
+guided command hides URLs
+and tokens that may contain credentials; secrets never appear in command-line
+arguments, logs or the Client APK:
 
 ```sh
-docker compose run --rm --no-deps --entrypoint sh initialize -c 'vi /seed/gateway/providers.json && chmod 600 /seed/gateway/providers.json'
+docker compose run --rm --no-deps --entrypoint node initialize /configure-provider.mjs iptv
+# Replace iptv with plex, jellyfin or stremio as needed.
 docker compose restart gateway
 ```
 
-For example, add `"iptv":{"enabled":true,"url":"https://example.org/list.m3u"}`
-as another top-level object member. A provider explicitly listed in this file
-becomes server-managed; remove that entry to use Client Settings again. Do not
-replace the existing worker entries or tokens. `docker compose down` preserves
+For Stremio, enter the addon's base URL and the catalog ID from its manifest;
+the optional media type narrows that catalog. For an M3U file rather than a URL,
+import a local file into the private media
+volume, then choose option 2 and enter `channels.m3u` at the prompt:
+
+```sh
+docker compose run -T --rm --no-deps --entrypoint sh initialize -c 'umask 077; cat > /seed/media/channels.m3u' < ./channels.m3u
+docker compose run --rm --no-deps --entrypoint node initialize /configure-provider.mjs iptv
+docker compose restart gateway
+```
+
+The guided command validates HTTP(S) addresses and regular imported files up to
+8 MiB,
+preserves unrelated worker entries, and replaces `providers.json` atomically with
+mode `0600`. A provider explicitly listed in this file becomes server-managed;
+remove that entry to use Client Settings again. `docker compose down` preserves
 SQLite and credentials; **`down -v` deletes the named volumes**.
 
 ### 3. Enable optional receivers
@@ -192,9 +210,12 @@ docker compose --profile rebrowser up -d
 docker compose ps --all
 ```
 
-Spotify Connect authorization is initiated in Client **Services** and completed
-on another device using its displayed URL/code; it is not a token typed into the
-APK. AirPlay advertises a receiver and uses a private PIN stored in its worker
+In the current source candidate, a new Spotify installation advertises a local
+Connect receiver after its optional profile starts. Choose it from a signed-in
+Spotify app on the same LAN. An existing installation keeps its selected
+credential mode and stored account state during upgrade. The published dev.52
+package instead uses a device-authorization URL/code shown in Client **Services**;
+it is not a token typed into the APK. AirPlay advertises a receiver and uses a private PIN stored in its worker
 volume. In Client dev.50 with an updated Full gateway/worker, open the AirPlay
 section and choose **Show AirPlay PIN**. Enter that four-digit receiver PIN on
 the iPhone or iPad; the six-digit gateway operator code is unrelated. The
@@ -212,11 +233,68 @@ Code/DIAL controls the TV receiver; it is separate from a
 YouTube account sign-in. A packaged process being up does not prove an account is
 ready or that a physical sender/player works.
 
-The default Spotify bridge has zeroconf advertising disabled: authorize it with
-the device-auth code first, then select the active Spotify receiver in Client.
-Do not expect this default bridge to appear as an ordinary Chromecast target.
+The current source candidate runs the Spotify worker on the host network so
+its built-in `_spotify-connect._tcp` advertisement and TCP 3679 pairing listener
+can reach the LAN. Its bearer-protected worker API remains bound to Docker's
+host-gateway address on TCP 8092, not the physical LAN. Use only the new
+source-built worker with this Compose mode; the published dev.52 worker and
+bundle remain unchanged. A Spotify Connect receiver is separate from a
+Chromecast target. On a trusted LAN, mDNS UDP 5353 and pairing TCP 3679 must
+reach the phone. Host registration and a private API bind passed a local probe.
+In the private September 24 QA installation, the phone discovered Zombie Box
+in Spotify, but audio and track metadata did not play correctly and some songs
+skipped. Connect playback remains unverified until a phone/TV retest passes.
+
+The private candidate bundle offers two modes without deleting saved account
+credentials. To select the alternative device-authorization code flow, stop the
+Spotify service and run its offline configuration helper, then start it again:
+
+```sh
+docker compose --profile spotify stop spotify
+docker compose run --rm --no-deps --entrypoint node initialize /configure-spotify-mode.mjs device_auth
+docker compose --profile spotify up -d spotify
+```
+
+Use `zeroconf` in the helper command to return to local Connect pairing. On a
+host with several networks, pass one to four host LAN interface names to limit
+the built-in mDNS advertisement, for example:
+
+```sh
+docker compose --profile spotify stop spotify
+docker compose run --rm --no-deps --entrypoint node initialize /configure-spotify-mode.mjs zeroconf wlp1s0
+docker compose --profile spotify up -d spotify
+```
+
+The interface must exist on the Docker host when the worker starts; the
+network-disabled initializer can validate its name but cannot inspect the host
+network. Omitting interface names preserves any previous allowlist. Pass
+`--all-interfaces` after `zeroconf` to clear it and advertise on every available
+interface. This selector narrows announcements; it does not itself repair a
+firewall, Wi-Fi client isolation or a failed phone pairing. A
+device-authorization code appears only when that mode has no usable stored
+account credentials; switching modes never erases credentials to force a new
+code. The current candidate Client labels account readiness separately from
+worker availability. Published dev.52 bundles do not contain this helper.
+
 AirPlay/RAOP advertisements start only after the optional AirPlay profile runs;
-YouTube DIAL announces only while the Client has activated the receiver. If a TV
+YouTube DIAL announces only while the Client has activated the receiver. On a
+host with multiple networks, set the one IPv4 address that the phone can reach
+before starting the receiver, using the offline initializer in the directory
+containing this Compose file:
+
+```sh
+docker compose --profile youtube-receiver stop youtube-receiver
+docker compose run --rm --no-deps --entrypoint node initialize /configure-youtube-dial.mjs 192.168.1.36
+docker compose --profile youtube-receiver up -d youtube-receiver
+```
+
+Replace the example address with the host's actual trusted LAN address. The
+helper validates the address, preserves the receiver token and other settings,
+and writes the private config atomically; the worker must restart to use it.
+The September 24 private QA used the host Wi-Fi address and the user's phone
+then found Zombie Box through DIAL and played a video on the selected Vizio.
+That physical result does not validate other LAN topologies or receiver
+persistence after a gateway restart. If a TV
 and phone occupy different local subnets, use a gateway HTTP address reachable
 from both before generating a Cast pairing QR. Gateway health from the TV alone
 does not prove the phone can use the address encoded in that QR.
@@ -303,10 +381,11 @@ docker compose --profile airplay --profile youtube-receiver --profile rebrowser 
 The old dev.46 Spotify image remains under dependency-license review because it
 links `xlab/vorbis-go` without an explicit license. The dev.52 Spotify image replaces
 that binding with reviewed MIT Ogg/Vorbis modules and ships corresponding sources.
-The current source Compose graph pins that licensed image by its published
-digest. Its private offline bundle includes the image, so enabling Spotify
-cannot select the older local build.
-The default installation does not start Spotify; enable it after account setup.
+The published dev.52 Compose bundle still pins that licensed image by digest.
+The current source Compose candidate instead builds a new licensed worker from
+the pinned upstream source and binds its API privately before host-network
+advertising. It has a distinct local image tag and no published identity. The
+default installation does not start Spotify; enable its profile to begin pairing.
 See [release policy](docs/release-policy.md).
 
 Threadfin is optional; direct IPTV M3U works without it. Configure IPTV/Plex/Jellyfin/
@@ -363,9 +442,9 @@ bash install.sh --profile youtube --profile spotify
 ```
 
 Supported profiles: `youtube`, `youtube-receiver`, `spotify`, `airplay`, `threadfin`,
-`rebrowser`. AirPlay/Threadfin source builds require their locked references
-(`make -C ../gateway-core references`); Spotify uses its frozen licensed GHCR
-image. Enabling a worker does not supply
+`rebrowser`. Spotify/AirPlay/Threadfin source builds require their locked references
+(`make -C ../gateway-core references`); the published dev.52 installer retains
+its frozen licensed Spotify GHCR digest. Enabling a worker does not supply
 accounts or certify receiver compatibility. Existing provider URLs/tokens are kept.
 
 Only discovery and receivers that need LAN multicast use host networking. Core and

@@ -3,6 +3,7 @@
   "repository": "zombiebox-gateway-full",
   "productRegistry": "workspace:docs/milestones.json",
   "notes": [
+    "Dev.71: Adds offline guided IPTV/Plex/Jellyfin/Stremio setup with hidden secret entry, validated input and private atomic configuration; raises bounded YouTube worker budgets and pins Core dev.58 for YouTube related/quality endpoints and the Spotify audio bridge. Source-built Spotify defaults new installs to Zeroconf while preserving device-auth/account fallback; private API bind and local Wi-Fi mDNS were probed. Phone YouTube DIAL discovery and Vizio video playback passed physical QA; Spotify TV sound, AirPlay playback and quality switching remain unverified. Published dev.52 assets stay frozen; no product milestone closes.",
     "Dev.70: Pins Core dev.55 for paired, no-store AirPlay receiver PIN retrieval in Client dev.50. The PIN differs from the operator code; README keeps local retrieval as a temporary fallback for published dev.52. Candidate image and physical iPad authentication/playback remain open; no product gate closes.",
     "Dev.69: First physical QA found host-network UDP discovery listening on 8098 while the selected TV's Fedora nm-shared firewall zone rejected the port. README now gives a zone-scoped, temporary operator trial. No automatic firewall mutation, new image or device acceptance is claimed.",
     "Dev.68: Pins Core dev.54 YouTube stream-resolution fix for a future image. Physical QA of public dev.52 found empty anonymous YouTube Home, a 502 playback resolution and initially stopped optional receivers. Public dev.52 images, installer channel and device acceptance remain unchanged.",
@@ -111,6 +112,6 @@
       "remoteURL": "https://github.com/ZombieBox-tv/zombiebox-gateway-full/milestone/6"
     }
   ],
-  "developmentCheckpoint": "v0.1.0-dev.69",
+  "developmentCheckpoint": "v0.1.0-dev.71",
   "remote": "https://github.com/ZombieBox-tv/zombiebox-gateway-full"
 }
