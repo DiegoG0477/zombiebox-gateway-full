@@ -1,4 +1,11 @@
 # zombiebox-gateway-full: component work
+## dev.74 shared capability-aware media candidate
+
+Pin Core dev.61 for probe-gated native MPEG-TS HLS with Gateway fallback,
+YouTube higher-rendition validation, IPTV setup state, and private receiver
+diagnostics. Keep the published dev.52 release unchanged. Build and physical
+receiver tests are tracked separately; no product milestone closes.
+
 
 ## dev.71 guided provider setup, Spotify Connect and receiver workers
 
