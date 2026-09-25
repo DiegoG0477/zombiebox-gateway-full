@@ -1,7 +1,7 @@
 name: zombie-box-tv
 services:
   gateway:
-    image: zombie-box-tv/gateway:0.1.0-dev.72
+    image: zombie-box-tv/gateway:0.1.0-dev.73
     build:
       context: ${ZOMBIE_CORE_DIR:-../gateway-core}
       dockerfile: ${ZOMBIE_FULL_DIR:-../gateway-full}/Dockerfile
@@ -135,7 +135,7 @@ services:
 
   spotify:
     profiles: [spotify]
-    image: zombie-box-tv/spotify:0.1.0-dev.71
+    image: zombie-box-tv/spotify:0.1.0-dev.73
     build:
       context: ${ZOMBIE_CORE_DIR:-../gateway-core}
       dockerfile: wrappers/spotify/Dockerfile
