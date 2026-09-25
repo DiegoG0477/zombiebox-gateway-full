@@ -3,6 +3,7 @@
   "repository": "zombiebox-gateway-full",
   "productRegistry": "workspace:docs/milestones.json",
   "notes": [
+    "Dev.78: Pins Core dev.65 and reserves local gateway/YouTube image identities for validated HD quality and adaptive playback. Existing Spotify/AirPlay worker images and public releases remain frozen. Image build and Vizio audio/HD playback are separate evidence; Spotify AES key refusal is unresolved. No product milestone closes.",
     "Dev.76: Pins Core dev.62 and new local gateway/Spotify images for capability-aware AirPlay HLS fallback and bounded Spotify key-refusal skip control. Gateway and Spotify dev.76 images built and installed for selected Vizio QA with existing data; AirPlay audio and Spotify sound still require the user's physical retest. Published images and older local tags remain frozen. No product milestone closes.",
     "Dev.75: Assigns distinct local Compose image identities to the Core dev.61 gateway/discovery and updated YouTube, Spotify and AirPlay workers; older published and private image tags remain unchanged. Host build and physical receiver QA are separate from source pinning. No product milestone closes.",
     "Dev.74: Pins Core dev.61 for probe-gated native HLS, YouTube higher-source validation, IPTV setup state, and private AirPlay/Spotify diagnostics. Local QA images and real receiver playback require separate checks; published dev.52 stays frozen. No product milestone closes.",
@@ -117,6 +118,6 @@
       "remoteURL": "https://github.com/ZombieBox-tv/zombiebox-gateway-full/milestone/6"
     }
   ],
-  "developmentCheckpoint": "v0.1.0-dev.76",
+  "developmentCheckpoint": "v0.1.0-dev.78",
   "remote": "https://github.com/ZombieBox-tv/zombiebox-gateway-full"
 }

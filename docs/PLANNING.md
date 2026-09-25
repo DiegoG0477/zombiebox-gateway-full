@@ -1,4 +1,14 @@
 # zombiebox-gateway-full: component work
+
+## dev.78 adaptive playback candidate
+
+Pin Core dev.65 and reserve new local Gateway/YouTube image identities for
+validated YouTube HD variants, the AirPlay AAC fallback and capability-driven
+playback/Cast negotiation. The existing Spotify and AirPlay worker images retain
+their identities. Source checks and image builds do not establish Spotify or
+Apple Music sound; the pinned Spotify daemon still refuses the observed AES
+key path. Existing published releases remain frozen. No milestone closes.
+
 ## dev.75 isolated local worker images
 
 Give the updated Gateway/discovery and YouTube, Spotify and AirPlay workers
