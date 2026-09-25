@@ -1,4 +1,11 @@
 # zombiebox-gateway-full: component work
+## dev.75 isolated local worker images
+
+Give the updated Gateway/discovery and YouTube, Spotify and AirPlay workers
+new local Compose tags so building a test candidate does not overwrite prior
+image identities. Preserve the published release and test physical playback
+separately; no product milestone closes.
+
 ## dev.74 shared capability-aware media candidate
 
 Pin Core dev.61 for probe-gated native MPEG-TS HLS with Gateway fallback,

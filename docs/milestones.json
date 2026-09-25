@@ -3,6 +3,7 @@
   "repository": "zombiebox-gateway-full",
   "productRegistry": "workspace:docs/milestones.json",
   "notes": [
+    "Dev.75: Assigns distinct local Compose image identities to the Core dev.61 gateway/discovery and updated YouTube, Spotify and AirPlay workers; older published and private image tags remain unchanged. Host build and physical receiver QA are separate from source pinning. No product milestone closes.",
     "Dev.74: Pins Core dev.61 for probe-gated native HLS, YouTube higher-source validation, IPTV setup state, and private AirPlay/Spotify diagnostics. Local QA images and real receiver playback require separate checks; published dev.52 stays frozen. No product milestone closes.",
     "Dev.73: Pins Core dev.60 and labels new local gateway/Spotify images for gateway-time media probes, version-aware evidence refresh, retryable YouTube-related busy responses and early Spotify audio headers with private flow diagnostics. Source checks pass; manual quality, related relevance and phone Spotify audio still require physical QA. Published dev.52 remains frozen.",
     "Dev.72: Pins Core dev.59 and labels a new local gateway image for YouTube feed context recovery from existing watch history after gateway restart. Spotify dev.71 image is unchanged. Compose/source checks pass; physical recommendation relevance remains open. No product milestone closes.",
