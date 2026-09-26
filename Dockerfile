@@ -12,6 +12,10 @@ COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certifica
 COPY LICENSE NOTICE /usr/share/doc/zombiebox/
 COPY docs/licenses/DIAL-LICENSE /usr/share/doc/zombiebox/DIAL-LICENSE
 COPY docs/licenses/go-qrcode-LICENSE /usr/share/doc/zombiebox/go-qrcode-LICENSE
+COPY docs/licenses/miekg-dns-LICENSE /usr/share/doc/zombiebox/miekg-dns-LICENSE
+COPY docs/licenses/golang-x-net-LICENSE /usr/share/doc/zombiebox/golang-x-net-LICENSE
+COPY docs/licenses/golang-x-sys-LICENSE /usr/share/doc/zombiebox/golang-x-sys-LICENSE
+COPY third_party/THIRD_PARTY_NOTICES.md /usr/share/doc/zombiebox/THIRD_PARTY_NOTICES.md
 USER 65532:65532
 EXPOSE 8090
 ENTRYPOINT ["/zombied"]
