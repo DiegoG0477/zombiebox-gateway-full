@@ -11,6 +11,8 @@ services:
         "0.0.0.0:8090",
         "-state",
         "/data/gateway.db",
+        "-hybrid-spool-dir",
+        "/data/hybrid-spools",
         "-media-dir",
         "/media",
         "-config",
