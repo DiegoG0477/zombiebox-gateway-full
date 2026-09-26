@@ -1,5 +1,15 @@
 # zombiebox-gateway-full: component work
 
+## 0.1.3-dev.0 Spotify upstream candidate (unreleased)
+
+Full pins Core `eca448b1c2b97e7e72478656b0749173f11df841` and assigns
+`zombie-box-tv/spotify:0.1.3-dev.0` to the source Compose graph. A local QA
+image was built from the exact go-librespot v0.10.2 commit with both first-party
+patches and GPL/MIT notices. The active QA worker still uses the previous
+image and retains its account state; a controlled phone retry is pending.
+This checkpoint does not advance the published install channel or close
+Spotify Premium, YouTube, IPTV or AirPlay acceptance gates.
+
 ## Unreleased: optional YouTube PO profile and live audio QA
 
 The source-only Full Compose graph adds a private, opt-in YouTube PO resolver

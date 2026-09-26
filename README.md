@@ -8,6 +8,11 @@ Development checkpoints are not stable releases or physical compatibility claims
 
 Depends on the exact gateway-core commit in `dependencies.lock.json`.
 
+The source-only `v0.1.3-dev.0` checkpoint pins a locally built Spotify image
+with go-librespot v0.10.2. It is an unreleased QA candidate; the published
+installer channel remains on the frozen dev.52 release. Spotify Premium audio
+and the other current playback regressions still need physical validation.
+
 ## How the system works
 
 ```text

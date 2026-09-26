@@ -188,7 +188,7 @@ services:
 
   spotify:
     profiles: [spotify]
-    image: zombie-box-tv/spotify:0.1.0-dev.77
+    image: zombie-box-tv/spotify:0.1.3-dev.0
     build:
       context: ${ZOMBIE_CORE_DIR:-../gateway-core}
       dockerfile: wrappers/spotify/Dockerfile
