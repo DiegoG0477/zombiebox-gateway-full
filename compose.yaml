@@ -121,6 +121,9 @@ services:
     profiles: [youtube-pot]
     image: brainicism/bgutil-ytdlp-pot-provider:2.0.0@sha256:79b7d390e024f3308a0b8fe2041be7e4e4d6a8c30ad6052a89bc51d210c385f1
     expose: [4416]
+    # Upstream prints generated PO tokens to stdout; retain no daemon logs.
+    logging:
+      driver: none
     user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
     mem_limit: 256m
     cpus: 1.0
