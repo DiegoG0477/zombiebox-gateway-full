@@ -117,6 +117,54 @@ services:
       retries: 3
     restart: unless-stopped
 
+  bgutil-provider:
+    profiles: [youtube-pot]
+    image: brainicism/bgutil-ytdlp-pot-provider:2.0.0@sha256:79b7d390e024f3308a0b8fe2041be7e4e4d6a8c30ad6052a89bc51d210c385f1
+    expose: [4416]
+    user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
+    mem_limit: 256m
+    cpus: 1.0
+    pids_limit: 32
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+
+  youtube-pot:
+    profiles: [youtube-pot]
+    image: zombie-box-tv/youtube-pot:0.1.0-dev.89-po-qa
+    build:
+      context: ${ZOMBIE_CORE_DIR:-../gateway-core}
+      dockerfile: wrappers/youtube-pot/Dockerfile
+    user: "${ZOMBIE_UID:-1000}:${ZOMBIE_GID:-1000}"
+    volumes:
+      - ${ZOMBIE_RUNTIME_ROOT:-.}/.local/youtube-pot:/config:ro,Z
+    expose: [8097]
+    mem_limit: 384m
+    cpus: 1.0
+    pids_limit: 48
+    read_only: true
+    tmpfs: ["/tmp:size=33554432,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    depends_on:
+      bgutil-provider:
+        condition: service_started
+      youtube:
+        condition: service_started
+    healthcheck:
+      test:
+        [
+          CMD,
+          python3,
+          -c,
+          "import urllib.request, sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8097/health').getcode() == 200 else 1)",
+        ]
+      interval: 30s
+      timeout: 4s
+      retries: 3
+    restart: unless-stopped
+
   youtube-receiver:
     profiles: [youtube-receiver]
     image: zombie-box-tv/youtube-receiver:0.1.0-dev.37

@@ -441,8 +441,11 @@ Optional workers are explicit to fit small hosts:
 bash install.sh --profile youtube --profile spotify
 ```
 
-Supported profiles: `youtube`, `youtube-receiver`, `spotify`, `airplay`, `threadfin`,
-`rebrowser`. Spotify/AirPlay/Threadfin source builds require their locked references
+Supported profiles: `youtube`, `youtube-pot`, `youtube-receiver`, `spotify`, `airplay`, `threadfin`,
+`rebrowser`. In this source candidate, `--profile youtube-pot` also starts the
+base YouTube worker and routes video resolution through the optional, private
+PO token resolver. The current published bundle does not include that profile;
+its 360p route and image identities remain frozen. Spotify/AirPlay/Threadfin source builds require their locked references
 (`make -C ../gateway-core references`); the published dev.52 installer retains
 its frozen licensed Spotify GHCR digest. Enabling a worker does not supply
 accounts or certify receiver compatibility. Existing provider URLs/tokens are kept.

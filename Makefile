@@ -28,7 +28,7 @@ check: setup
 	sh -n install-docker.sh scripts/fetch-alpine-sources.sh
 	node --test bootstrap/configure-provider.test.mjs bootstrap/configure-spotify-mode.test.mjs bootstrap/configure-youtube-dial.test.mjs
 	python3 -m unittest discover -s tests
-	$(COMPOSE) --profile youtube --profile youtube-receiver --profile spotify --profile airplay --profile threadfin --profile rebrowser config --quiet
+	$(COMPOSE) --profile youtube --profile youtube-pot --profile youtube-receiver --profile spotify --profile airplay --profile threadfin --profile rebrowser config --quiet
 build: setup
 	$(COMPOSE) build gateway
 up: deps

@@ -17,6 +17,7 @@ while [[ $# -gt 0 ]]; do
     case $1 in
         --profile)
             case ${2:-} in
+                youtube-pot) profiles+=(youtube youtube-pot) ;;
                 youtube | youtube-receiver | spotify | airplay | threadfin | rebrowser) profiles+=("$2") ;;
                 *)
                     echo 'Unknown or missing optional profile.' >&2
@@ -30,7 +31,7 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         *)
-            echo 'Usage: bash install.sh [--prepare-only] [--profile youtube|youtube-receiver|spotify|airplay|threadfin|rebrowser]' >&2
+            echo 'Usage: bash install.sh [--prepare-only] [--profile youtube|youtube-pot|youtube-receiver|spotify|airplay|threadfin|rebrowser]' >&2
             exit 2
             ;;
     esac
@@ -52,6 +53,10 @@ else
     ZOMBIE_CORE_DIR=$(python3 scripts/dependencies.py check gateway-core)
     composition=$component/compose.yaml
 fi
+if [[ -f release.compose.json && " ${profiles[*]} " == *" youtube-pot "* ]]; then
+    echo 'The PO resolver is available only in this source candidate, not the frozen release bundle.' >&2
+    exit 2
+fi
 bash scripts/setup-runtime.sh
 python3 scripts/setup-youtube.py
 python3 scripts/setup-services.py
@@ -68,11 +73,17 @@ else
     python3 "$ZOMBIE_CORE_DIR/scripts/generate-extended-probes.py" --output "$ZOMBIE_RUNTIME_ROOT/.local/gateway/probes"
 fi
 options=()
+pot_selected=false
+for profile in "${profiles[@]}"; do
+    if [[ $profile == youtube-pot ]]; then pot_selected=true; fi
+done
 for profile in "${profiles[@]}"; do
     options+=(--profile "$profile")
-    if [[ $profile == youtube ]]; then
+    if [[ $profile == youtube-pot ]]; then
+        python3 scripts/setup-youtube.py --enable --pot
+    elif [[ $profile == youtube && $pot_selected == false ]]; then
         python3 scripts/setup-youtube.py --enable
-    else
+    elif [[ $profile != youtube ]]; then
         python3 scripts/setup-services.py --enable "${profile//-/_}"
     fi
 done

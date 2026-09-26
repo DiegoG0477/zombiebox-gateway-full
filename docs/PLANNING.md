@@ -1,5 +1,20 @@
 # zombiebox-gateway-full: component work
 
+## Unreleased: optional YouTube PO profile and live audio QA
+
+The source-only Full Compose graph adds a private, opt-in YouTube PO resolver
+with a digest-pinned provider. Source installation can select its profile and
+reconcile the worker and gateway identities without exposing credentials.
+The current published bundle remains frozen. Host resolution returned 1080p,
+720p, 480p and 360p candidates, but the selected Vizio has not yet shown a
+playing quality above 360p. The QA gateway and AirPlay worker dev.90 plus
+signed Client dev.59 retain existing data. On the selected Vizio, the author
+reported faster AirPlay audio startup and functional pause/resume, while sender
+pause/play still lags 1–3 s and resume after minutes may take 3–7 s. The TV
+timeline lacks sender offset, cover art is withheld when track association is
+uncertain, and local track controls remain unsupported. Source checks pass. No
+product milestone closes.
+
 ## dev.78 adaptive playback candidate
 
 Pin Core dev.65 and reserve new local Gateway/YouTube image identities for

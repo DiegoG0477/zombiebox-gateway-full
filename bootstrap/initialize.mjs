@@ -125,6 +125,7 @@ function workerConfig(service, filename, defaults) {
 for (const name of [
   "gateway",
   "youtube",
+  "youtube-pot",
   "youtube-receiver",
   "spotify",
   "airplay",
@@ -145,6 +146,15 @@ const youtube = workerConfig("youtube", "youtube.json", {
   cookie: "",
   poToken: "",
   visitorData: "",
+});
+// The optional resolver proxies the base worker with this same bearer token.
+// Seed one shared identity so enabling the profile cannot silently break auth.
+config("youtube-pot/pot.json", {
+  token: youtube.token,
+  upstream_url: "http://youtube:8091",
+  bgutil_url: "http://bgutil-provider:4416",
+  cooldown_seconds: 300,
+  timeout_seconds: 12,
 });
 const receiver = workerConfig("youtube-receiver", "receiver.json", {
   listen: "0.0.0.0",

@@ -12,6 +12,7 @@ MOUNTS = {
         "/config": "gateway",
     },
     "youtube": {"/config": "youtube"},
+    "youtube-pot": {"/config": "youtube-pot"},
     "youtube-receiver": {"/config": "youtube-receiver"},
     "spotify": {"/config/worker.json": "spotify", "/state": "spotify-state"},
     "airplay": {"/config/worker.json": "airplay", "/state": "airplay-state"},
